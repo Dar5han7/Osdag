@@ -747,8 +747,27 @@ class IS800_2007(object):
         return beta_lw
 
     # -------------------------------------------------------------
-    #   10.6 Design of Connections
+    """ 10.6 Design of Connections"""
     # -------------------------------------------------------------
+    @staticmethod
+    def effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2):
+        if (end1_cond1 == end1_cond2 == "Restrained" and end2_cond1 == end2_cond2 == "Free") or (
+                end1_cond1 == end1_cond2 == "Free" and end2_cond1 == end2_cond2 == "Restrained"):
+            eff_length_coeff = 2
+        elif (end1_cond1 == end2_cond1 == "Free" and end2_cond2 == end1_cond2 == "Restrained"):
+            eff_length_coeff = 2
+        elif (end1_cond1 == end2_cond1 == "Restrained" and end2_cond2 == end1_cond2 == "Free"):
+            eff_length_coeff = 1
+        elif (end1_cond1 == end1_cond2 == end2_cond2 == "Restrained" and end2_cond1 == "Free") or (
+                end2_cond1 == end2_cond2 == end1_cond2 == "Restrained" and end1_cond1 == "Free"):
+            eff_length_coeff = 1.2
+        elif (end1_cond1 == end1_cond2 == end2_cond1 == "Restrained" and end2_cond2 == "Free") or (
+                end2_cond1 == end2_cond2 == end1_cond1 == "Restrained" and end1_cond2 == "Free"):
+            eff_length_coeff = 0.8
+        elif end1_cond1 == end1_cond2 == end2_cond1 == end2_cond2 == "Restrained":
+            eff_length_coeff = 0.65
+        return eff_length_coeff
+
     # -------------------------------------------------------------
     #   10.7 Minimum Design Action on Connection
     # -------------------------------------------------------------
