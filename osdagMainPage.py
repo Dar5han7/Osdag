@@ -23,6 +23,7 @@ from Connections.Shear.Endplate.endPlateMain import launch_endplate_controller
 from Connections.Moment.BBSpliceCoverPlate.BBSpliceCoverPlateBolted.coverplate_bolted_main import launch_coverplate_controller
 from Connections.Moment.ExtendedEndPlate.extended_main import launch_extendedendplate_controller
 from Connections.Moment.BCEndPlate.bc_endplate_main import launch_bc_endplate_controller
+from Tension.Tension_main import launch_tension_controller
 import os.path
 import subprocess
 import shutil
@@ -77,7 +78,7 @@ class OsdagMainWindow(QMainWindow):
         self.ui.btn_2dframe.clicked.connect(self.unavailable)
         self.ui.btn_3dframe.clicked.connect(self.unavailable)
         self.ui.btn_groupdesign.clicked.connect(self.unavailable)
-        self.ui.btn_tension.clicked.connect(self.unavailable)
+        self.ui.btn_tension.clicked.connect(self.show_tension)
         self.ui.btn_plate.clicked.connect(self.unavailable)
         self.ui.comboBox_help.setCurrentIndex(0)
         self.ui.comboBox_help.currentIndexChanged.connect(self.selection_change)
@@ -268,6 +269,41 @@ class OsdagMainWindow(QMainWindow):
 
         else:
             QMessageBox.about(self, "INFO", "Please select appropriate connection")
+
+    ####added#####
+
+    def show_tension(self):
+
+        folder = self.select_workspace_folder()
+        folder = str(folder)
+        if not os.path.exists(folder):
+            if folder == '':
+                pass
+            else:
+                os.mkdir(folder, 0755)
+
+        root_path = folder
+        images_html_folder = ['images_html']
+        flag = True
+        for create_folder in images_html_folder:
+            if root_path == '':
+                flag = False
+                return flag
+            else:
+                try:
+                    os.mkdir(os.path.join(root_path, create_folder))
+                except OSError:
+                    shutil.rmtree(os.path.join(folder, create_folder))
+                    os.mkdir(os.path.join(root_path, create_folder))
+
+
+
+        # if self.ui.btn_tension.isChecked():
+        launch_tension_controller(self, folder)
+            # self.ui.myStackedWidget.setCurrentIndex(0)
+
+        # else:
+        #     QMessageBox.about(self, "INFO", "Please select appropriate connection")
 
     # ********************************* Help Action *********************************************************************************************
 
