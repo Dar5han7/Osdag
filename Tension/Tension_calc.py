@@ -55,9 +55,9 @@ def preliminary_tension_member_design_due_to_rupture_of_critical_section(A_n, F_
     # else:
     #     alpha = 0.8
 
-    if no_of_bolts == "2":
+    if no_of_bolts <=2:
         alpha = 0.6
-    elif no_of_bolts == "3":
+    elif no_of_bolts == 3:
         alpha = 0.7
     else:
         alpha = 0.8
@@ -67,8 +67,36 @@ def preliminary_tension_member_design_due_to_rupture_of_critical_section(A_n, F_
 
     return T_pdn
 
+# cl 6.2 Design Strength Due to Rupture of critical section
+def tension_member_design_due_to_rupture_of_critical_section(A_n, F_u):
+    "preliminary design strength,T_pdn,as governed by rupture at net section"
+    "A_n = net area of the total cross-section"
+    "A_nc = net area of the connected leg"
+    "A_go = gross area of the outstanding leg"
+    "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
+    "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
+    "F_u = Ultimate Strength of material"
+    "w = outstanding leg width"
+    "b_s = shear lag width"
+    "t = thickness of the leg"
+    "Lc = length of the end connection"
 
-def tension_member_design_due_to_rupture_of_critical_section(A_nc, A_go, F_u, F_y, L_c, w, b_s, t):
+    # if connection_type == "bolted":
+    #     if no_of_bolts == "2":
+    #         alpha = 0.6
+    #     elif no_of_bolts == "3":
+    #         alpha = 0.7
+    #     else:
+    #         aplha = 0.8
+    # else:
+    #     alpha = 0.8
+
+    gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
+    T_pdn = 0.9 * A_n * F_u / gamma_m1
+
+    return T_pdn
+
+def tension_angle_member_design_due_to_rupture_of_critical_section(A_nc, A_go, F_u, F_y, L_c, w, b_s, t):
     "design strength,T_dn,as governed by rupture at net section"
     "A_n = net area of the total cross-section"
     "A_nc = net area of the connected leg"
@@ -132,9 +160,9 @@ def tension_design(uiObj):
     #     conn_type = "Leg"
     conn = uiObj['Member']['Location']
     Member_type = uiObj['Member']['SectionType']
-    # Member_type = "Columns"
+    # Member_type = "Angles"
     Member_size = uiObj['Member']['SectionSize']
-    # Member_size = "UC 203 x 203 x 46"
+    # Member_size = "40 40 x 4"
     Member_fu = float(uiObj['Member']['fu (MPa)'])
     Member_fy = float(uiObj['Member']['fy (MPa)'])
     Member_length = float(uiObj["Member"]["Member_length"])
@@ -147,8 +175,8 @@ def tension_design(uiObj):
     bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
     bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
     bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
-    dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
 
+    dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
     end1_cond1 = uiObj["Support_Condition"]["end1_cond1"]
     end1_cond2 = uiObj["Support_Condition"]["end1_cond2"]
     end2_cond1 = uiObj["Support_Condition"]["end2_cond1"]
@@ -193,18 +221,26 @@ def tension_design(uiObj):
 
     dictmemberdata = get_memberdata(Member_size,Member_type)
     print dictmemberdata
-
-    member_tw = float(dictmemberdata["tw"])
-    member_tf = float(dictmemberdata["T"])
-    member_d = float(dictmemberdata["D"])
-    member_B = float(dictmemberdata["B"])
-    member_R1= float(dictmemberdata["R1"])
-    Member_Ag = float (dictmemberdata["Area"]) * 100
-    radius_gyration = min((float(dictmemberdata["rz"])),(float(dictmemberdata["ry"])))
+    if conn != "Leg":
+        member_tw = float(dictmemberdata["tw"])
+        member_tf = float(dictmemberdata["T"])
+        member_d = float(dictmemberdata["D"])
+        member_B = float(dictmemberdata["B"])
+        member_R1= float(dictmemberdata["R1"])
+        Member_Ag = float (dictmemberdata["Area"]) * 100
+        radius_gyration = min((float(dictmemberdata["rz"])),(float(dictmemberdata["ry"])))*10
+    else:
+        member_leg = dictmemberdata["AXB"]
+        leg = member_leg.split("x")
+        leg1 = leg[0]
+        leg2 = leg[1]
+        t = float(dictmemberdata["t"])
+        Member_Ag = float(dictmemberdata["Area"]) * 100
+        radius_gyration = min((float(dictmemberdata["ru(max)"])), (float(dictmemberdata["rv(min)"]))) * 10
 
     # Calculation for Design Strength Due to Yielding of Gross Section
     tension_yielding = tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
-    no_of_bolts = bolt_row * bolt_column
+    no_of_bolts = bolt_row
 
     k =  IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
     tension_slenderness = tension_member_design_check_for_slenderness(k,Member_length,radius_gyration)
@@ -223,22 +259,41 @@ def tension_design(uiObj):
             A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw
             A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw
     elif conn=="Flange":
+        if Member_type == "Beams":
             Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
             A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2 * 2
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2 * 2
             A_tg = (bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) * member_tf * 2 * 2
             A_tn = ((bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) - (bolt_column/2 -0.5) * dia_hole) * member_tf * 2 * 2
+        elif Member_type == "Channels":
+            Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
+            A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2
+            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
+            A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
+            A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
+    else:
+        Member_An = Member_Ag - (bolt_column * dia_hole * t)
+        A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)
+        A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * t)
+        A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t
+        A_tn = ((((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)) - (((bolt_column -0.5) * dia_hole))) * t
+
+    if conn == "Leg":
+        w = max(float(leg1), float(leg2))
+        shear_lag = ((min(float(leg1), float(leg2)))-bolt_edgedistance) + w - t
+        L_c = (bolt_row_pitch * (bolt_row - 1))
     else:
         pass
 
     # cl 6.2 Design Strength Due to Block Shear
     tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
     # Calculation for Design Strength Due to Yielding of Gross Section
-    tension_rupture = preliminary_tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu,
-                                                                                           no_of_bolts) / 1000
+    if conn == "Leg" and bolt_row > 1:
+        tension_rupture = tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
+    else:
+        tension_rupture = tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu)/1000
 
-
-    tension_design = min (tension_blockshear,tension_rupture,tension_yielding)
+    tension_design = min(tension_blockshear,tension_rupture,tension_yielding)
 
 
  # End of Calculation, SAMPLE Output dictionary
@@ -252,13 +307,20 @@ def tension_design(uiObj):
     outputobj['Tension_Force']['Block_Shear'] = float(round(tension_blockshear,3))
     outputobj['Tension_Force']['Efficiency'] = float(round((Tension_load/tension_design),3))
     outputobj['Tension_Force']['Slenderness'] = float(round((tension_slenderness),3))
-    if  outputobj['Tension_Force']['Efficiency'] < 1 and tension_slenderness < 400:
+
+    # for i,j in uiObj.items():
+    #     if j == " ":
+    #         logger.error(": Please enter all the inputs")
+    #     else:
+    #         pass
+
+    if outputobj['Tension_Force']['Efficiency'] < 1 and outputobj['Tension_Force']['Slenderness'] < 400:
         design_status = True
-    elif outputobj['Tension_Force']['Efficiency'] > 1 and tension_slenderness < 400:
+    elif outputobj['Tension_Force']['Efficiency'] > 1 and outputobj['Tension_Force']['Slenderness'] < 400:
         design_status = False
         logger.error(": Chosen Member Section Size is not sufficient")
         logger.info(": Increase the size of Member ")
-    elif outputobj['Tension_Force']['Efficiency'] < 1 and tension_slenderness > 400:
+    elif outputobj['Tension_Force']['Efficiency'] < 1 and outputobj['Tension_Force']['Slenderness']> 400:
         design_status = False
         logger.error(": Chosen Member Section Size is not sufficient")
         logger.warning(": Minimum Radius of Gyration of Member shall be {} mm ".format(radius_gyration_min))

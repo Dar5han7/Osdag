@@ -15,6 +15,7 @@ from Tension_calc import tension_design
 # from ui_weld_details_1 import Ui_Weld_Details_1
 # from ui_weld_details_2 import Ui_Weld_Details_2
 from reportGenerator import save_html
+from OCC.Display.backend import load_backend, get_qt_modules
 # from drawing_2D import ExtendedEndPlate
 from OCC.Graphic3d import Graphic3d_NOT_2D_ALUMINUM
 # from drawing2D_bothway import ExtendedEndPlate
@@ -676,7 +677,7 @@ class Maincontroller(QMainWindow):
 		self.showMaximized()
 		self.folder = folder
 		self.connection = "Tension"
-		self.get_sectiondata()
+		self.get_sectiondata(self)
 		# self.get_beamdata()
 		self.result_obj = None
 		# self.endplate_type = ''
@@ -711,8 +712,8 @@ class Maincontroller(QMainWindow):
 		# self.ui.combo_grade.currentIndexChanged[str].connect(self.call_bolt_fu)
 		self.ui.txt_Fu.textChanged.connect(self.call_weld_fu)
 		#added
-		# self.ui.combo_sectiontype.currentIndex().connect(self.ui.combo_sectionsize)
-		# self.ui.combo_sectiontype.currentIndexChanged[str].connect(self.indexChanged)
+		a = self.ui.combo_sectiontype.currentTextChanged.connect(self.get_sectiondata)
+		# self.ui.combo_sectiontype.currentTextChanged.connect(self.Typechanged)
 		##########
 		self.ui.btn_Design.clicked.connect(self.design_btnclicked)
 		self.ui.btn_Design.clicked.connect(self.osdag_header)
@@ -791,8 +792,11 @@ class Maincontroller(QMainWindow):
 		self.resultObj = None
 		self.disable_buttons()
 	# #added
-	# def indexChanged(self, index):
-	# 	membertype = self.ui.combo_sectiontype.currentTextChanged()
+	# def Typechanged(self):
+	# 	# for count in range(self.ui.combo_sectiontype.count()):
+	# 	# 	print index
+	# 	membertype = self.ui.combo_sectiontype.currentText()
+	# 	# membdata = get_membercombolist(membertype)
 	# 	return membertype
 	# #added
 
@@ -807,7 +811,6 @@ class Maincontroller(QMainWindow):
 
 
 	def init_display(self, backend_str=None, size=(1024, 768)):
-		from OCC.Display.backend import load_backend, get_qt_modules
 
 		used_backend = load_backend(backend_str)
 		global display, start_display, app, _, USED_BACKEND
@@ -1224,11 +1227,11 @@ class Maincontroller(QMainWindow):
 		if self.ui.combo_conn_loc.currentIndex() == 0:
 			incomplete_list.append("Location")
 
-		if self.ui.combo_sectionsize.currentIndex() == 0:
-			incomplete_list.append("Column section")
+		if self.ui.combo_sectiontype.currentIndex() == 0:
+			incomplete_list.append("Section Type")
 
-		# if self.ui.combo_beamSec.currentIndex() == 0:
-		# 	incomplete_list.append("Beam section")
+		if self.ui.combo_sectionsize.currentIndex() == 0:
+			incomplete_list.append("Section Size")
 
 		if self.ui.txt_Fu.text() == "":
 			incomplete_list.append("Ultimate strength")
@@ -1236,31 +1239,44 @@ class Maincontroller(QMainWindow):
 		if self.ui.txt_Fy.text() == "":
 			incomplete_list.append("Yield strength")
 
+		if self.ui.txt_Member_length.text() == "":
+			incomplete_list.append("Member length")
+
 		if self.ui.txt_Tensionforce.text() == '' or float(self.ui.txt_Tensionforce.text()) == 0:
 			incomplete_list.append("Axial force")
 
-		# if self.ui.txt_Moment.text() == '' or float(self.ui.txt_Moment.text()) == 0:
-		# 	incomplete_list.append("Moment")
-		#
-		# if self.ui.txt_Shear.text() == '':
-		# 	incomplete_list.append("Shear force")
+		if self.ui.txt_rowsofbolts.text() == "":
+			incomplete_list.append("No of Row Bolts")
+
+		if self.ui.txt_columssofbolts.text() == "":
+			incomplete_list.append("No of Column Bolts")
+
+		if self.ui.txt_rowpitch.text() == "":
+			incomplete_list.append("Row Pitch")
+
+		if self.ui.txt_columpitch.text() == "":
+			incomplete_list.append("Column Pitch")
+
+		if self.ui.txt_Enddistance.text() == "":
+			incomplete_list.append("Enddistance")
 
 		if self.ui.combo_diameter.currentIndex() == 0:
-			incomplete_list.append("Diameter of bolt")
+			incomplete_list.append("Diameter of Bolts")
 
-		# if self.ui.combo_type.currentIndex() == 0:
-		# 	incomplete_list.append("Type of bolt")
+		if self.ui.txt_Edgedistance.text() == "":
+			incomplete_list.append("Edgedistance")
 
-		# if self.ui.combo_plateThick.currentIndex() == 0:
-		# 	incomplete_list.append("Flange splice plate thickness")
+		if self.ui.combo_end1_cond1.currentIndex() == 0:
+			incomplete_list.append("End 1 Condition 1")
 
-		# if self.ui.combo_weld_method.currentIndex() == 1:
-		#
-		# 	if self.ui.combo_webSize.currentIndex() == 0:
-		# 		incomplete_list.append("Web weld thickness")
-		#
-		# 	if self.ui.combo_flangeSize.currentIndex() == 0:
-		# 		incomplete_list.append("Flange weld thickness")
+		if self.ui.combo_end1_cond2.currentIndex() == 0:
+			incomplete_list.append("End 1 Condition 2")
+
+		if self.ui.combo_end2_cond1.currentIndex() == 0:
+			incomplete_list.append("End 2 Condition 1")
+
+		if self.ui.combo_end2_cond2.currentIndex() == 0:
+			incomplete_list.append("End 2 Condition 2")
 
 		if len(incomplete_list) > 0:
 			flag = False
@@ -1497,16 +1513,17 @@ class Maincontroller(QMainWindow):
 	# 	combo_section = self.ui.combo_sectionsize
 	# 	self.color_oldDatabase_section(old_beamdata, beamdata, combo_section)
 
-	def get_sectiondata(self):
+	def get_sectiondata(self,text):
 		# loc = self.ui.combo_connLoc.currentText()
-		if self.ui.combo_sectiontype.activated:
-			membertype_sec = self.ui.combo_sectiontype.currentText()
-		membdata = get_membercombolist(membertype_sec)
+		self.ui.combo_sectionsize.clear()
+		member_type = text
+		membdata = get_membercombolist(member_type)
 		old_beamdata = get_oldbeamcombolist()
 		combo_section = ''
 		self.ui.combo_sectionsize.addItems(membdata)
 		combo_section = self.ui.combo_sectionsize
 		self.color_oldDatabase_section(old_beamdata, membdata, combo_section)
+
 
 	def color_oldDatabase_section(self, old_section, intg_section, combo_section):
 		"""
