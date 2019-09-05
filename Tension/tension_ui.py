@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file 'ui_tension02.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -160,7 +161,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1366, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1366, 21))
         self.menubar.setStyleSheet("")
         self.menubar.setNativeMenuBar(False)
         self.menubar.setObjectName("menubar")
@@ -1036,7 +1037,8 @@ class Ui_MainWindow(object):
         self.combo_sectiontype.addItem("")
         self.combo_sectiontype.addItem("")
         self.combo_sectiontype.addItem("")
-        self.combo_sectiontype.addItem("")
+        # self.combo_sectiontype.addItem("")
+        # self.combo_sectiontype.addItem("")
         self.label_9 = QtWidgets.QLabel(self.dockWidgetContents)
         self.label_9.setGeometry(QtCore.QRect(10, 20, 100, 25))
         font = QtGui.QFont()
@@ -1290,6 +1292,8 @@ class Ui_MainWindow(object):
         self.combo_conn_loc.setStyleSheet("QComboBox { combobox-popup: 0; }")
         self.combo_conn_loc.setMaxVisibleItems(5)
         self.combo_conn_loc.setObjectName("combo_conn_loc")
+        self.combo_conn_loc.addItem("")
+        self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
@@ -1572,6 +1576,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.mytabWidget.setCurrentIndex(-1)
         self.combo_sectiontype.setCurrentIndex(0)
+        self.combo_sectionsize.setCurrentIndex(-1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.txt_Fu, self.txt_Fy)
         MainWindow.setTabOrder(self.txt_Fy, self.btn_Design)
@@ -1765,12 +1770,13 @@ class Ui_MainWindow(object):
         self.btn_Design.setText(_translate("MainWindow", "Design"))
         self.btn_Design.setShortcut(_translate("MainWindow", "Alt+D"))
         self.lbl_column.setText(_translate("MainWindow", "<html><head/><body><p>Section Type*</p></body></html>"))
-        self.combo_sectiontype.setItemText(0, _translate("MainWindow", "Beams"))
-        self.combo_sectiontype.setItemText(1, _translate("MainWindow", "Columns"))
-        self.combo_sectiontype.setItemText(2, _translate("MainWindow", "Angles"))
-        self.combo_sectiontype.setItemText(3, _translate("MainWindow", "Channels"))
-        self.combo_sectiontype.setItemText(4, _translate("MainWindow", "EqualAngle"))
-        self.combo_sectiontype.setItemText(5, _translate("MainWindow", "UnequalAngle"))
+        self.combo_sectiontype.setItemText(0, _translate("MainWindow", "Select Type"))
+        self.combo_sectiontype.setItemText(1, _translate("MainWindow", "Beams"))
+        self.combo_sectiontype.setItemText(2, _translate("MainWindow", "Columns"))
+        self.combo_sectiontype.setItemText(3, _translate("MainWindow", "Angles"))
+        self.combo_sectiontype.setItemText(4, _translate("MainWindow", "Channels"))
+        # self.combo_sectiontype.setItemText(5, _translate("MainWindow", "EqualAngle"))
+        # self.combo_sectiontype.setItemText(6, _translate("MainWindow", "UnequalAngle"))
         self.label_9.setText(_translate("MainWindow", "<html><head/><body><p>Conn Location *</p></body></html>"))
         self.label_18.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Factored loads</span></p></body></html>"))
         self.label_5.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600; font-style:italic;\">Bolt</span></p></body></html>"))
@@ -1808,6 +1814,8 @@ class Ui_MainWindow(object):
         self.combo_conn_loc.setItemText(1, _translate("MainWindow", "Web"))
         self.combo_conn_loc.setItemText(2, _translate("MainWindow", "Flange"))
         self.combo_conn_loc.setItemText(3, _translate("MainWindow", "Leg"))
+        self.combo_conn_loc.setItemText(4, _translate("MainWindow", "Back to Back Web"))
+        self.combo_conn_loc.setItemText(5, _translate("MainWindow", "Back to Back Leg"))
         self.lbl_column_2.setText(_translate("MainWindow", "<html><head/><body><p>Section Size *</p></body></html>"))
         self.lbl_edgedistance.setText(_translate("MainWindow", "<html><head/><body><p>Edge Distance</p></body></html>"))
         self.actionInput.setText(_translate("MainWindow", "Input"))
@@ -1887,14 +1895,5 @@ class Ui_MainWindow(object):
         self.actionShow_column_2.setText(_translate("MainWindow", "Show column"))
         self.actionShow_column_2.setShortcut(_translate("MainWindow", "Alt+Shift+C"))
 
+
 import icons_rc
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-

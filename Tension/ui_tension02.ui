@@ -337,7 +337,16 @@
         <number>1</number>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>1</number>
+        </property>
+        <property name="topMargin">
+         <number>1</number>
+        </property>
+        <property name="rightMargin">
+         <number>1</number>
+        </property>
+        <property name="bottomMargin">
          <number>1</number>
         </property>
         <item>
@@ -416,7 +425,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -2964,6 +2973,11 @@ QMenu::item:selected {
      </property>
      <item>
       <property name="text">
+       <string>Select Type</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>Beams</string>
       </property>
      </item>
@@ -3639,7 +3653,7 @@ QMenu::item:selected {
      </item>
      <item>
       <property name="text">
-       <string>Web </string>
+       <string>Web</string>
       </property>
      </item>
      <item>
@@ -3650,6 +3664,16 @@ QMenu::item:selected {
      <item>
       <property name="text">
        <string>Leg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Back to Back Web</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Back to Back Angles</string>
       </property>
      </item>
     </widget>

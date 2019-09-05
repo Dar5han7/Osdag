@@ -221,7 +221,7 @@ def tension_design(uiObj):
 
     dictmemberdata = get_memberdata(Member_size,Member_type)
     print dictmemberdata
-    if conn != "Leg":
+    if Member_type != "Angles":
         member_tw = float(dictmemberdata["tw"])
         member_tf = float(dictmemberdata["T"])
         member_d = float(dictmemberdata["D"])
@@ -258,6 +258,19 @@ def tension_design(uiObj):
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tw)
             A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw
             A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw
+    elif conn == "Back to Back Web":
+        Member_Ag = float (dictmemberdata["Area"]) * 100 *2
+        Member_An = Member_Ag - (bolt_column * dia_hole * member_tw)
+        if bolt_column >=2:
+            A_vg = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance)*member_tw)*2*2
+            A_vn = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance - ((bolt_row -0.5)*dia_hole)) * member_tw)*2*2
+            A_tg = bolt_column_pitch* (bolt_column - 1)  * member_tw*2
+            A_tn = (bolt_column_pitch*(bolt_column-1) - ((1)*dia_hole)) * member_tw*2
+        else:
+            A_vg = (bolt_row_pitch + bolt_enddistance) * member_tw*2
+            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tw)*2
+            A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw*2
+            A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw*2
     elif conn=="Flange":
         if Member_type == "Beams":
             Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
@@ -271,6 +284,13 @@ def tension_design(uiObj):
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
             A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
             A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
+    elif conn == "Back to Back Leg":
+        Member_Ag = float(dictmemberdata["Area"]) * 100*2
+        Member_An = Member_Ag - (bolt_column * dia_hole * t)
+        A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)*2
+        A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * t)*2
+        A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t*2
+        A_tn = ((((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)) - (((bolt_column -0.5) * dia_hole))) * t*2
     else:
         Member_An = Member_Ag - (bolt_column * dia_hole * t)
         A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)
@@ -278,7 +298,7 @@ def tension_design(uiObj):
         A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t
         A_tn = ((((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)) - (((bolt_column -0.5) * dia_hole))) * t
 
-    if conn == "Leg":
+    if Member_type == "Angles":
         w = max(float(leg1), float(leg2))
         shear_lag = ((min(float(leg1), float(leg2)))-bolt_edgedistance) + w - t
         L_c = (bolt_row_pitch * (bolt_row - 1))
@@ -288,7 +308,7 @@ def tension_design(uiObj):
     # cl 6.2 Design Strength Due to Block Shear
     tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
     # Calculation for Design Strength Due to Yielding of Gross Section
-    if conn == "Leg" and bolt_row > 1:
+    if (Member_type == "Angles")and bolt_row > 1 :
         tension_rupture = tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
     else:
         tension_rupture = tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu)/1000

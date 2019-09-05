@@ -1284,10 +1284,27 @@ class Maincontroller(QMainWindow):
 
 		return flag
 
+	def wrong_combo(self):
+		flag = True
+		
+		if self.ui.combo_conn_loc.currentText()== "Back to Back Leg" and self.ui.combo_sectiontype.currentText()== "Channels" :
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
+		elif (self.ui.combo_conn_loc.currentText() == "Flange" or self.ui.combo_conn_loc.currentText() == "Web") and self.ui.combo_sectiontype.currentText() == "Angles" :
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+		else:
+			flag = True
+
+		return flag
+
 	def design_btnclicked(self):
 		"""
 		Returns:
 		"""
+		if self.wrong_combo() is not True:
+			return
 		if self.validate_inputs_on_design_btn() is not True:
 			return
 		self.alist = self.designParameters()
@@ -1449,6 +1466,7 @@ class Maincontroller(QMainWindow):
 		Returns:
 		"""
 		self.ui.combo_conn_loc.setCurrentIndex(0)
+		self.ui.combo_sectiontype.setCurrentIndex(0)
 		self.ui.combo_sectionsize.setCurrentIndex(0)
 		# self.ui.combo_columnSec.setCurrentIndex(0)
 		# self.ui.combo_beamSec.setCurrentIndex(0)
