@@ -772,6 +772,14 @@ class Maincontroller(QMainWindow):
 		# self.ui.txt_Moment.setValidator(doubl_validator)
 		# self.ui.txt_Shear.setValidator(doubl_validator)
 		self.ui.txt_Tensionforce.setValidator(doubl_validator)
+		self.ui.txt_Member_length.setValidator(doubl_validator)
+		self.ui.txt_Tensionforce.setValidator(doubl_validator)
+		self.ui.txt_rowsofbolts.setValidator(validator)
+		self.ui.txt_columssofbolts.setValidator(validator)
+		self.ui.txt_rowpitch.setValidator(doubl_validator)
+		self.ui.txt_columpitch.setValidator(doubl_validator)
+		self.ui.txt_Enddistance.setValidator(doubl_validator)
+		self.ui.txt_Edgedistance.setValidator(doubl_validator)
 
 		min_fu = 290
 		max_fu = 780
@@ -801,13 +809,13 @@ class Maincontroller(QMainWindow):
 	# #added
 
 
-	def on_change(self, newIndex):
-		if newIndex == "Groove Weld (CJP)":
-			self.ui.combo_flangeSize.setEnabled(False)
-			self.ui.combo_webSize.setEnabled(False)
-		else:
-			self.ui.combo_flangeSize.setEnabled(True)
-			self.ui.combo_webSize.setEnabled(True)
+	# def on_change(self, newIndex):
+	# 	if newIndex == "Groove Weld (CJP)":
+	# 		self.ui.combo_flangeSize.setEnabled(False)
+	# 		self.ui.combo_webSize.setEnabled(False)
+	# 	else:
+	# 		self.ui.combo_flangeSize.setEnabled(True)
+	# 		self.ui.combo_webSize.setEnabled(True)
 
 
 	def init_display(self, backend_str=None, size=(1024, 768)):

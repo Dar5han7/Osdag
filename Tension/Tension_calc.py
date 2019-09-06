@@ -229,6 +229,7 @@ def tension_design(uiObj):
         member_R1= float(dictmemberdata["R1"])
         Member_Ag = float (dictmemberdata["Area"]) * 100
         radius_gyration = min((float(dictmemberdata["rz"])),(float(dictmemberdata["ry"])))*10
+
     else:
         member_leg = dictmemberdata["AXB"]
         leg = member_leg.split("x")
@@ -237,6 +238,24 @@ def tension_design(uiObj):
         t = float(dictmemberdata["t"])
         Member_Ag = float(dictmemberdata["Area"]) * 100
         radius_gyration = min((float(dictmemberdata["ru(max)"])), (float(dictmemberdata["rv(min)"]))) * 10
+
+    if conn == "Back to Back Web" and Member_type == "Channels":
+        Member_Izz = float(dictmemberdata["Iz"])
+        Member_Iyy = float(dictmemberdata["Iy"])
+        Member_Cy = float(dictmemberdata["Cy"])/10
+        Iyy = (Member_Iyy + (Member_Ag/100* Member_Cy* Member_Cy))*2
+        Izz = 2 * Member_Izz
+        I = min(Iyy,Izz)
+        radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
+
+    if conn == "Back to Back Leg" and Member_type == "Angles":
+        Member_Izz = float(dictmemberdata["Iz"])
+        Member_Iyy = float(dictmemberdata["Iy"])
+        Member_Cy = float(dictmemberdata["Cy"])/10
+        Iyy = (Member_Iyy + (Member_Ag/100 * Member_Cy * Member_Cy)) * 2
+        Izz = 2 * Member_Izz
+        I = min(Iyy, Izz)
+        radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
 
     # Calculation for Design Strength Due to Yielding of Gross Section
     tension_yielding = tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
@@ -284,6 +303,15 @@ def tension_design(uiObj):
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
             A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
             A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
+        elif Member_type == "Back to Back Web":
+            Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
+            A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2*2
+            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - (
+                        (bolt_row - 0.5) * dia_hole)) * member_tf) * 2*2
+            A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2*2
+            A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (
+                        bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2*2
+
     elif conn == "Back to Back Leg":
         Member_Ag = float(dictmemberdata["Area"]) * 100*2
         Member_An = Member_Ag - (bolt_column * dia_hole * t)
