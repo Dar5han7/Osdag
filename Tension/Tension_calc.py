@@ -175,6 +175,7 @@ def tension_design(uiObj):
     bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
     bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
     bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
+    Plate_thickness =  float(uiObj["Bolt"]["Platethickness"])
 
     dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
     end1_cond1 = uiObj["Support_Condition"]["end1_cond1"]
@@ -243,19 +244,41 @@ def tension_design(uiObj):
         Member_Izz = float(dictmemberdata["Iz"])
         Member_Iyy = float(dictmemberdata["Iy"])
         Member_Cy = float(dictmemberdata["Cy"])/10
-        Iyy = (Member_Iyy + (Member_Ag/100* Member_Cy* Member_Cy))*2
+        Iyy = (Member_Iyy + (Member_Ag/100* (Member_Cy+(Plate_thickness/20))* (Member_Cy+(Plate_thickness/20))))*2
         Izz = 2 * Member_Izz
         I = min(Iyy,Izz)
         radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
 
-    if conn == "Back to Back Leg" and Member_type == "Angles":
+    if conn == "Back to Back Angles" and Member_type == "Angles":
         Member_Izz = float(dictmemberdata["Iz"])
         Member_Iyy = float(dictmemberdata["Iy"])
         Member_Cy = float(dictmemberdata["Cy"])/10
-        Iyy = (Member_Iyy + (Member_Ag/100 * Member_Cy * Member_Cy)) * 2
+        Iyy = (Member_Iyy + (Member_Ag/100 * (Member_Cy+(Plate_thickness/20)) *(Member_Cy+(Plate_thickness/20)))) * 2
         Izz = 2 * Member_Izz
         I = min(Iyy, Izz)
         radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
+
+    if conn == "Star Angles" and Member_type == "Angles":
+        Member_Izz = float(dictmemberdata["Iz"])
+        Member_Iyy = float(dictmemberdata["Iy"])
+        Member_Cy = float(dictmemberdata["Cy"])/10
+        Member_Cz = float(dictmemberdata["Cz"]) / 10
+        Iyy = (Member_Iyy + (Member_Ag/100 * (Member_Cy+(Plate_thickness/20)) * (Member_Cy+(Plate_thickness/20)))) * 2
+        Izz = (Member_Izz + (Member_Ag/100 * Member_Cz * Member_Cz)) * 2
+        I = min(Iyy, Izz)
+        radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
+
+
+
+    # if conn == "Back to Back Leg" and Member_type == "Angles":
+    #     Member_Izz = float(dictmemberdata["Iz"])
+    #     Member_Iyy = float(dictmemberdata["Iy"])
+    #     Member_Cy = float(dictmemberdata["Cy"])/10
+    #     Iyy = (Member_Iyy + (Member_Ag/100 * Member_Cy * Member_Cy)) * 2
+    #     Izz = 2 * Member_Izz
+    #     I = min(Iyy, Izz)
+    #     radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
+    #
 
     # Calculation for Design Strength Due to Yielding of Gross Section
     tension_yielding = tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
@@ -312,7 +335,7 @@ def tension_design(uiObj):
             A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (
                         bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2*2
 
-    elif conn == "Back to Back Leg":
+    elif conn == "Back to Back Leg" and "Star Angles":
         Member_Ag = float(dictmemberdata["Area"]) * 100*2
         Member_An = Member_Ag - (bolt_column * dia_hole * t)
         A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)*2

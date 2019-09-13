@@ -969,7 +969,7 @@ class Maincontroller(QMainWindow):
 		uiObj["Bolt"]["Columnpitch"] = self.ui.txt_columpitch.text()
 		uiObj["Bolt"]["Enddistance"] = self.ui.txt_Enddistance.text()
 		uiObj["Bolt"]["Edgedistance"] = self.ui.txt_Edgedistance.text()
-
+		uiObj["Bolt"]["Platethickness"] = self.ui.txt_plate_thk.text()
 		# uiObj["Bolt"]["Type"] = self.ui.combo_type.currentText()
 
 		# uiObj["Plate"] = {}
@@ -1106,6 +1106,7 @@ class Maincontroller(QMainWindow):
 			self.ui.txt_rowpitch.setText(str(uiObj["Bolt"]["Rowpitch"]))
 			self.ui.txt_columpitch.setText(str(uiObj["Bolt"]["Columnpitch"]))
 			self.ui.txt_Enddistance.setText(str(uiObj["Bolt"]["Enddistance"]))
+			self.ui.txt_plate_thk.setText(str(uiObj["Bolt"]["Platethickness"]))
 			# self.ui.txt_Edgedistance.setText(str(uiObj["Bolt"]["Edgedistance"]))
 			# self.ui.txt_weldlength_inline.setText(str(uiObj["Weld"]["weldlength_inline"]))
 			# self.ui.txt_weldlength_oppline.setText(str(uiObj["Weld"]["weldlength_oppline"]))
@@ -1268,6 +1269,9 @@ class Maincontroller(QMainWindow):
 		if self.ui.txt_Enddistance.text() == "":
 			incomplete_list.append("Enddistance")
 
+		if self.ui.txt_plate_thk.text() == "":
+			incomplete_list.append("Platethickness")
+
 		if self.ui.combo_diameter.currentIndex() == 0:
 			incomplete_list.append("Diameter of Bolts")
 
@@ -1296,6 +1300,10 @@ class Maincontroller(QMainWindow):
 		flag = True
 		
 		if self.ui.combo_conn_loc.currentText()== "Back to Back Leg" and self.ui.combo_sectiontype.currentText()== "Channels" :
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
+		if self.ui.combo_conn_loc.currentText()== "Star Angles" and self.ui.combo_sectiontype.currentText()== "Channels" :
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
 
@@ -1492,7 +1500,7 @@ class Maincontroller(QMainWindow):
 		self.ui.txt_rowpitch.clear()
 		# self.ui.txt_Edgedistance.clear()
 		self.ui.txt_Enddistance.clear()
-
+		self.ui.txt_plate_thk.clear()
 		# self.ui.txt_weldlength_inline.clear()
 		# self.ui.txt_weldlength_oppline.clear()
 		self.ui.combo_end1_cond1.setCurrentIndex(0)

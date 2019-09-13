@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'ui_tension02.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.1
+# Created by: PyQt5 UI code generator 5.7.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -161,7 +160,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1366, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1366, 25))
         self.menubar.setStyleSheet("")
         self.menubar.setNativeMenuBar(False)
         self.menubar.setObjectName("menubar")
@@ -1037,8 +1036,6 @@ class Ui_MainWindow(object):
         self.combo_sectiontype.addItem("")
         self.combo_sectiontype.addItem("")
         self.combo_sectiontype.addItem("")
-        # self.combo_sectiontype.addItem("")
-        # self.combo_sectiontype.addItem("")
         self.label_9 = QtWidgets.QLabel(self.dockWidgetContents)
         self.label_9.setGeometry(QtCore.QRect(10, 20, 100, 25))
         font = QtGui.QFont()
@@ -1204,7 +1201,7 @@ class Ui_MainWindow(object):
         self.lbl_beam1_10.setFont(font)
         self.lbl_beam1_10.setObjectName("lbl_beam1_10")
         self.combo_end1_cond1 = QtWidgets.QComboBox(self.dockWidgetContents)
-        self.combo_end1_cond1.setGeometry(QtCore.QRect(150, 530, 160, 27))
+        self.combo_end1_cond1.setGeometry(QtCore.QRect(150, 560, 160, 27))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -1218,7 +1215,7 @@ class Ui_MainWindow(object):
         self.combo_end1_cond1.addItem("")
         self.combo_end1_cond1.addItem("")
         self.combo_end2_cond1 = QtWidgets.QComboBox(self.dockWidgetContents)
-        self.combo_end2_cond1.setGeometry(QtCore.QRect(150, 590, 160, 27))
+        self.combo_end2_cond1.setGeometry(QtCore.QRect(150, 620, 160, 27))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -1232,7 +1229,7 @@ class Ui_MainWindow(object):
         self.combo_end2_cond1.addItem("")
         self.combo_end2_cond1.addItem("")
         self.label_8 = QtWidgets.QLabel(self.dockWidgetContents)
-        self.label_8.setGeometry(QtCore.QRect(10, 540, 131, 16))
+        self.label_8.setGeometry(QtCore.QRect(10, 570, 131, 16))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(False)
@@ -1240,7 +1237,7 @@ class Ui_MainWindow(object):
         self.label_8.setFont(font)
         self.label_8.setObjectName("label_8")
         self.combo_end2_cond2 = QtWidgets.QComboBox(self.dockWidgetContents)
-        self.combo_end2_cond2.setGeometry(QtCore.QRect(150, 620, 160, 27))
+        self.combo_end2_cond2.setGeometry(QtCore.QRect(150, 650, 160, 27))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -1254,7 +1251,7 @@ class Ui_MainWindow(object):
         self.combo_end2_cond2.addItem("")
         self.combo_end2_cond2.addItem("")
         self.combo_end1_cond2 = QtWidgets.QComboBox(self.dockWidgetContents)
-        self.combo_end1_cond2.setGeometry(QtCore.QRect(150, 560, 160, 27))
+        self.combo_end1_cond2.setGeometry(QtCore.QRect(150, 590, 160, 27))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -1268,7 +1265,7 @@ class Ui_MainWindow(object):
         self.combo_end1_cond2.addItem("")
         self.combo_end1_cond2.addItem("")
         self.label_10 = QtWidgets.QLabel(self.dockWidgetContents)
-        self.label_10.setGeometry(QtCore.QRect(10, 600, 131, 16))
+        self.label_10.setGeometry(QtCore.QRect(10, 630, 131, 16))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(False)
@@ -1276,7 +1273,7 @@ class Ui_MainWindow(object):
         self.label_10.setFont(font)
         self.label_10.setObjectName("label_10")
         self.label_43 = QtWidgets.QLabel(self.dockWidgetContents)
-        self.label_43.setGeometry(QtCore.QRect(10, 510, 151, 25))
+        self.label_43.setGeometry(QtCore.QRect(10, 540, 151, 25))
         font = QtGui.QFont()
         font.setPointSize(11)
         self.label_43.setFont(font)
@@ -1292,6 +1289,7 @@ class Ui_MainWindow(object):
         self.combo_conn_loc.setStyleSheet("QComboBox { combobox-popup: 0; }")
         self.combo_conn_loc.setMaxVisibleItems(5)
         self.combo_conn_loc.setObjectName("combo_conn_loc")
+        self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
         self.combo_conn_loc.addItem("")
@@ -1316,7 +1314,7 @@ class Ui_MainWindow(object):
         self.combo_sectionsize.setMaxVisibleItems(5)
         self.combo_sectionsize.setObjectName("combo_sectionsize")
         self.lbl_edgedistance = QtWidgets.QLabel(self.dockWidgetContents)
-        self.lbl_edgedistance.setGeometry(QtCore.QRect(10, 480, 131, 21))
+        self.lbl_edgedistance.setGeometry(QtCore.QRect(10, 470, 131, 21))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(False)
@@ -1324,13 +1322,29 @@ class Ui_MainWindow(object):
         self.lbl_edgedistance.setFont(font)
         self.lbl_edgedistance.setObjectName("lbl_edgedistance")
         self.txt_Edgedistance = QtWidgets.QLineEdit(self.dockWidgetContents)
-        self.txt_Edgedistance.setGeometry(QtCore.QRect(150, 480, 160, 27))
+        self.txt_Edgedistance.setGeometry(QtCore.QRect(150, 470, 160, 27))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(False)
         font.setWeight(50)
         self.txt_Edgedistance.setFont(font)
         self.txt_Edgedistance.setObjectName("txt_Edgedistance")
+        self.txt_plate_thk = QtWidgets.QLineEdit(self.dockWidgetContents)
+        self.txt_plate_thk.setGeometry(QtCore.QRect(150, 500, 160, 27))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setWeight(50)
+        self.txt_plate_thk.setFont(font)
+        self.txt_plate_thk.setObjectName("txt_plate_thk")
+        self.lbl_edgedistance_4 = QtWidgets.QLabel(self.dockWidgetContents)
+        self.lbl_edgedistance_4.setGeometry(QtCore.QRect(10, 500, 131, 21))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setWeight(50)
+        self.lbl_edgedistance_4.setFont(font)
+        self.lbl_edgedistance_4.setObjectName("lbl_edgedistance_4")
         self.inputDock.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.inputDock)
         self.actionInput = QtWidgets.QAction(MainWindow)
@@ -1775,8 +1789,6 @@ class Ui_MainWindow(object):
         self.combo_sectiontype.setItemText(2, _translate("MainWindow", "Columns"))
         self.combo_sectiontype.setItemText(3, _translate("MainWindow", "Angles"))
         self.combo_sectiontype.setItemText(4, _translate("MainWindow", "Channels"))
-        # self.combo_sectiontype.setItemText(5, _translate("MainWindow", "EqualAngle"))
-        # self.combo_sectiontype.setItemText(6, _translate("MainWindow", "UnequalAngle"))
         self.label_9.setText(_translate("MainWindow", "<html><head/><body><p>Conn Location *</p></body></html>"))
         self.label_18.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Factored loads</span></p></body></html>"))
         self.label_5.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600; font-style:italic;\">Bolt</span></p></body></html>"))
@@ -1815,9 +1827,11 @@ class Ui_MainWindow(object):
         self.combo_conn_loc.setItemText(2, _translate("MainWindow", "Flange"))
         self.combo_conn_loc.setItemText(3, _translate("MainWindow", "Leg"))
         self.combo_conn_loc.setItemText(4, _translate("MainWindow", "Back to Back Web"))
-        self.combo_conn_loc.setItemText(5, _translate("MainWindow", "Back to Back Leg"))
+        self.combo_conn_loc.setItemText(5, _translate("MainWindow", "Back to Back Angles"))
+        self.combo_conn_loc.setItemText(6, _translate("MainWindow", "Star Angles"))
         self.lbl_column_2.setText(_translate("MainWindow", "<html><head/><body><p>Section Size *</p></body></html>"))
         self.lbl_edgedistance.setText(_translate("MainWindow", "<html><head/><body><p>Edge Distance</p></body></html>"))
+        self.lbl_edgedistance_4.setText(_translate("MainWindow", "<html><head/><body><p>Plate thk (mm)</p></body></html>"))
         self.actionInput.setText(_translate("MainWindow", "Input"))
         self.actionInput.setToolTip(_translate("MainWindow", "Input browser"))
         self.actionInputwindow.setText(_translate("MainWindow", "inputwindow"))
@@ -1895,5 +1909,14 @@ class Ui_MainWindow(object):
         self.actionShow_column_2.setText(_translate("MainWindow", "Show column"))
         self.actionShow_column_2.setShortcut(_translate("MainWindow", "Alt+Shift+C"))
 
-
 import icons_rc
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
