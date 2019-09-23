@@ -712,7 +712,7 @@ class Maincontroller(QMainWindow):
 		# self.ui.combo_grade.currentIndexChanged[str].connect(self.call_bolt_fu)
 		self.ui.txt_Fu.textChanged.connect(self.call_weld_fu)
 		#added
-		a = self.ui.combo_sectiontype.currentTextChanged.connect(self.get_sectiondata)
+		self.ui.combo_sectiontype.currentTextChanged.connect(self.get_sectiondata)
 		# self.ui.combo_sectiontype.currentTextChanged.connect(self.Typechanged)
 		##########
 		self.ui.btn_Design.clicked.connect(self.design_btnclicked)
@@ -749,8 +749,8 @@ class Maincontroller(QMainWindow):
 		self.ui.actionAsk_Us_a_Question.triggered.connect(self.open_ask_question)
 		self.ui.actionSample_Tutorials.triggered.connect(self.open_tutorials)
 		self.ui.actionDesign_examples.triggered.connect(self.design_examples)
-		# self.ui.combo_weld_method.currentTextChanged.connect(self.on_change)
-		# #self.ui.combo_weld_method.triggered.connect(self.on_change)
+		self.ui.combo_conn_loc.currentTextChanged.connect(self.on_change)
+		# self.ui.combo_conn_loc.activated.connect(self.on_change)
 		# self.ui.btn_Weld.clicked.connect(self.weld_details)
 		# self.ui.btn_pitchDetail.clicked.connect(self.pitch_details)
 		# self.ui.btn_plateDetail.clicked.connect(self.plate_details)
@@ -809,13 +809,15 @@ class Maincontroller(QMainWindow):
 	# #added
 
 
-	# def on_change(self, newIndex):
-	# 	if newIndex == "Groove Weld (CJP)":
-	# 		self.ui.combo_flangeSize.setEnabled(False)
-	# 		self.ui.combo_webSize.setEnabled(False)
-	# 	else:
-	# 		self.ui.combo_flangeSize.setEnabled(True)
-	# 		self.ui.combo_webSize.setEnabled(True)
+	def on_change(self, newIndex):
+		if newIndex == "Back to Back Angles" :
+			self.ui.txt_plate_thk.setEnabled(True)
+		elif newIndex ==  "Star Angles":
+			self.ui.txt_plate_thk.setEnabled(True)
+		elif newIndex == "Back to Back Web":
+			self.ui.txt_plate_thk.setEnabled(True)
+		else:
+			self.ui.txt_plate_thk.setEnabled(False)
 
 
 	def init_display(self, backend_str=None, size=(1024, 768)):
@@ -1299,17 +1301,30 @@ class Maincontroller(QMainWindow):
 	def wrong_combo(self):
 		flag = True
 		
-		if self.ui.combo_conn_loc.currentText()== "Back to Back Leg" and self.ui.combo_sectiontype.currentText()== "Channels" :
+		if self.ui.combo_conn_loc.currentText()== "Back to Back Angles" and self.ui.combo_sectiontype.currentText()!= "Angles":
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
 
-		if self.ui.combo_conn_loc.currentText()== "Star Angles" and self.ui.combo_sectiontype.currentText()== "Channels" :
+		elif self.ui.combo_conn_loc.currentText() == "Star Angles" and self.ui.combo_sectiontype.currentText()!= "Angles":
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
 
-		elif (self.ui.combo_conn_loc.currentText() == "Flange" or self.ui.combo_conn_loc.currentText() == "Web") and self.ui.combo_sectiontype.currentText() == "Angles" :
+		elif self.ui.combo_conn_loc.currentText()== "Leg" and self.ui.combo_sectiontype.currentText()!= "Angles":
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
+		elif self.ui.combo_conn_loc.currentText()=="Back to Back Web" and self.ui.combo_sectiontype.currentText() != "Channels":
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
+		elif self.ui.combo_conn_loc.currentText() == "Flange" and self.ui.combo_sectiontype.currentText() == "Angles" :
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
+		elif self.ui.combo_conn_loc.currentText() == "Web" and self.ui.combo_sectiontype.currentText() == "Angles" :
+			flag = False
+			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
+
 		else:
 			flag = True
 
@@ -1498,7 +1513,7 @@ class Maincontroller(QMainWindow):
 		self.ui.txt_columssofbolts.clear()
 		self.ui.txt_columpitch.clear()
 		self.ui.txt_rowpitch.clear()
-		# self.ui.txt_Edgedistance.clear()
+		self.ui.txt_Edgedistance.clear()
 		self.ui.txt_Enddistance.clear()
 		self.ui.txt_plate_thk.clear()
 		# self.ui.txt_weldlength_inline.clear()

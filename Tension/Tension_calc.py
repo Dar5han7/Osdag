@@ -1,3 +1,6 @@
+
+
+
 from model import *
 from utilities.is800_2007 import IS800_2007
 from utilities.other_standards import IS1363_part_1_2002, IS1363_part_3_2002, IS1367_Part3_2002
@@ -15,135 +18,6 @@ def module_setup():
 
 
 module_setup()
-
-#######################################################################
-
-# cl 6.2 Design Strength Due to Yielding of Gross Section
-def tension_member_design_due_to_yielding_of_gross_section(A_g, F_y):
-    "design strength of members under axial tension,T_dg,as governed by yielding of gross section"
-    "A_g = gross area of cross-section"
-    "gamma_m0 = partial safety factor for failure in tension by yielding"
-    "F_y = yield stress of the material"
-    gamma_m0 = IS800_2007.cl_5_4_1_Table_5["gamma_m0"]['yielding']
-    T_dg = A_g * F_y / gamma_m0
-
-    return T_dg
-
-
-
-# cl 6.2 Design Strength Due to Rupture of critical section
-def preliminary_tension_member_design_due_to_rupture_of_critical_section(A_n, F_u, no_of_bolts):
-    "preliminary design strength,T_pdn,as governed by rupture at net section"
-    "A_n = net area of the total cross-section"
-    "A_nc = net area of the connected leg"
-    "A_go = gross area of the outstanding leg"
-    "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
-    "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
-    "F_u = Ultimate Strength of material"
-    "w = outstanding leg width"
-    "b_s = shear lag width"
-    "t = thickness of the leg"
-    "Lc = length of the end connection"
-
-    # if connection_type == "bolted":
-    #     if no_of_bolts == "2":
-    #         alpha = 0.6
-    #     elif no_of_bolts == "3":
-    #         alpha = 0.7
-    #     else:
-    #         aplha = 0.8
-    # else:
-    #     alpha = 0.8
-
-    if no_of_bolts <=2:
-        alpha = 0.6
-    elif no_of_bolts == 3:
-        alpha = 0.7
-    else:
-        alpha = 0.8
-
-    gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
-    T_pdn = alpha * A_n * F_u / gamma_m1
-
-    return T_pdn
-
-# cl 6.2 Design Strength Due to Rupture of critical section
-def tension_member_design_due_to_rupture_of_critical_section(A_n, F_u):
-    "preliminary design strength,T_pdn,as governed by rupture at net section"
-    "A_n = net area of the total cross-section"
-    "A_nc = net area of the connected leg"
-    "A_go = gross area of the outstanding leg"
-    "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
-    "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
-    "F_u = Ultimate Strength of material"
-    "w = outstanding leg width"
-    "b_s = shear lag width"
-    "t = thickness of the leg"
-    "Lc = length of the end connection"
-
-    # if connection_type == "bolted":
-    #     if no_of_bolts == "2":
-    #         alpha = 0.6
-    #     elif no_of_bolts == "3":
-    #         alpha = 0.7
-    #     else:
-    #         aplha = 0.8
-    # else:
-    #     alpha = 0.8
-
-    gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
-    T_pdn = 0.9 * A_n * F_u / gamma_m1
-
-    return T_pdn
-
-def tension_angle_member_design_due_to_rupture_of_critical_section(A_nc, A_go, F_u, F_y, L_c, w, b_s, t):
-    "design strength,T_dn,as governed by rupture at net section"
-    "A_n = net area of the total cross-section"
-    "A_nc = net area of the connected leg"
-    "A_go = gross area of the outstanding leg"
-    "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
-    "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
-    "F_u = Ultimate Strength of material"
-    "w = outstanding leg width"
-    "b_s = shear lag width"
-    "t = thickness of the leg"
-    "L_c = length of the end connection"
-    "gamma_m0 = partial safety factor for failure in tension by yielding"
-    "F_y = yield stress of the material"
-
-    gamma_m0 = IS800_2007.cl_5_4_1_Table_5["gamma_m0"]['yielding']
-    gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
-
-    beta = float(1.4 - (0.076 * float(w) / float(t) * float(F_y) / float(F_u) * float(b_s) / float(L_c)))
-    print(beta)
-
-    if beta <= (F_u * gamma_m0 / F_y * gamma_m1) and beta >= 0.7:
-        beta = beta
-    else:
-        beta = 0.7
-
-    T_dn = (0.9 * A_nc * F_u / gamma_m1) + (beta * A_go * F_y / gamma_m0)
-
-    return T_dn
-
-def tension_member_design_check_for_slenderness(K,L,r,load_type="none"):
-    "A tension member in which a reversal of direct stress occurs due to loads otherthan wind or seismic forces less than 180"
-    "KL= effective length of member"
-    "r = radius of gyration of member"
-
-    # if load_type == "Reversal Load":
-    #     if K * L / r < 180:
-    #         design_check = True
-    #     else:
-    #         design_check = False
-    # else:
-    #     if K * L / r < 400:
-    #         design_check = True
-    #     else:
-    #         design_check = False
-    slender = K * L*1000 /r
-
-    return slender
 
 # Start of Main Program
 
@@ -237,6 +111,7 @@ def tension_design(uiObj):
         leg1 = leg[0]
         leg2 = leg[1]
         t = float(dictmemberdata["t"])
+
         Member_Ag = float(dictmemberdata["Area"]) * 100
         radius_gyration = min((float(dictmemberdata["ru(max)"])), (float(dictmemberdata["rv(min)"]))) * 10
 
@@ -281,14 +156,14 @@ def tension_design(uiObj):
     #
 
     # Calculation for Design Strength Due to Yielding of Gross Section
-    tension_yielding = tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
+    tension_yielding = IS800_2007.tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
     no_of_bolts = bolt_row
 
     k =  IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
-    tension_slenderness = tension_member_design_check_for_slenderness(k,Member_length,radius_gyration)
+    tension_slenderness = IS800_2007.design_check_for_slenderness(k,Member_length,radius_gyration)
     radius_gyration_min = k * (Member_length * 1000)/400
 
-    if conn == "Web":
+    if conn == "Web" and Member_type != "Angles":
         Member_An = Member_Ag - (bolt_column * dia_hole * member_tw)
         if bolt_column >=2:
             A_vg = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance)*member_tw)*2
@@ -302,7 +177,7 @@ def tension_design(uiObj):
             A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw
     elif conn == "Back to Back Web":
         Member_Ag = float (dictmemberdata["Area"]) * 100 *2
-        Member_An = Member_Ag - (bolt_column * dia_hole * member_tw)
+        Member_An = Member_Ag - (bolt_column * dia_hole * 2* member_tw)
         if bolt_column >=2:
             A_vg = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance)*member_tw)*2*2
             A_vn = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance - ((bolt_row -0.5)*dia_hole)) * member_tw)*2*2
@@ -313,31 +188,28 @@ def tension_design(uiObj):
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tw)*2
             A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw*2
             A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw*2
-    elif conn=="Flange":
-        if Member_type == "Beams":
-            Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
+    elif conn=="Flange" and Member_type != "Angles":
+            Member_An = Member_Ag - (member_d * member_tw/2) - (bolt_column * dia_hole * member_tf)
             A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2 * 2
             A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2 * 2
             A_tg = (bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) * member_tf * 2 * 2
             A_tn = ((bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) - (bolt_column/2 -0.5) * dia_hole) * member_tf * 2 * 2
-        elif Member_type == "Channels":
-            Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
-            A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2
-            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
-            A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
-            A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
-        elif Member_type == "Back to Back Web":
-            Member_An = Member_Ag - (bolt_column * dia_hole * member_tf)
-            A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2*2
-            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - (
-                        (bolt_row - 0.5) * dia_hole)) * member_tf) * 2*2
-            A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2*2
-            A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (
-                        bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2*2
+        # elif Member_type == "Channels":
+        #     Member_An = Member_Ag -(member_d * member_tw/2) - (bolt_column * dia_hole * member_tf)
+        #     A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2
+        #     A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
+        #     A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
+        #     A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
+        # elif Member_type == "Columns":
+        #     Member_An = Member_Ag - (member_d * member_tw / 2) - (bolt_column * dia_hole * member_tf)
+        #     A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2
+        #     A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2
+        #     A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
+        #     A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
 
-    elif conn == "Back to Back Leg" and "Star Angles":
+    elif conn == "Back to Back Angles" and conn == "Star Angles":
         Member_Ag = float(dictmemberdata["Area"]) * 100*2
-        Member_An = Member_Ag - (bolt_column * dia_hole * t)
+        Member_An = Member_Ag - (bolt_column * dia_hole * 2* t)
         A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)*2
         A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * t)*2
         A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t*2
@@ -360,9 +232,9 @@ def tension_design(uiObj):
     tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
     # Calculation for Design Strength Due to Yielding of Gross Section
     if (Member_type == "Angles")and bolt_row > 1 :
-        tension_rupture = tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
+        tension_rupture =IS800_2007.tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
     else:
-        tension_rupture = tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu)/1000
+        tension_rupture =IS800_2007.tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu)/1000
 
     tension_design = min(tension_blockshear,tension_rupture,tension_yielding)
 

@@ -19,6 +19,24 @@ class IS800_2007(object):
     # ==========================================================================
     """    SECTION  3     GENERAL DESIGN REQUIREMENTS   """
     # ==========================================================================
+    @staticmethod
+    def design_check_for_slenderness(K, L, r, load_type="none"):
+        "KL= effective length of member"
+        "r = radius of gyration of member"
+
+        # if load_type == "Reversal Load":
+        #     if K * L / r < 180:
+        #         design_check = True
+        #     else:
+        #         design_check = False
+        # else:
+        #     if K * L / r < 400:
+        #         design_check = True
+        #     else:
+        #         design_check = False
+        slender = K * L * 1000 / r
+
+        return slender
     """    SECTION  4     METHODS OF STRUCTURAL ANALYSIS   """
     # ==========================================================================
     """    SECTION  5     LIMIT STATE DESIGN   """
@@ -40,6 +58,118 @@ class IS800_2007(object):
     # -------------------------------------------------------------
     #   6.4 Design Strength Due to Block Shear
     # -------------------------------------------------------------
+
+    # cl 6.2 Design Strength Due to Yielding of Gross Section
+    @staticmethod
+    def tension_member_design_due_to_yielding_of_gross_section(A_g, F_y):
+        "design strength of members under axial tension,T_dg,as governed by yielding of gross section"
+        "A_g = gross area of cross-section"
+        "gamma_m0 = partial safety factor for failure in tension by yielding"
+        "F_y = yield stress of the material"
+        gamma_m0 = IS800_2007.cl_5_4_1_Table_5["gamma_m0"]['yielding']
+        T_dg = A_g * F_y / gamma_m0
+
+        return T_dg
+
+    #######################################################################
+    # cl 6.3 Design Strength Due to Rupture of critical section
+    @staticmethod
+    def preliminary_tension_member_design_due_to_rupture_of_critical_section(A_n, F_u, no_of_bolts):
+        "preliminary design strength,T_pdn,as governed by rupture at net section"
+        "A_n = net area of the total cross-section"
+        "A_nc = net area of the connected leg"
+        "A_go = gross area of the outstanding leg"
+        "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
+        "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
+        "F_u = Ultimate Strength of material"
+        "w = outstanding leg width"
+        "b_s = shear lag width"
+        "t = thickness of the leg"
+        "Lc = length of the end connection"
+
+        # if connection_type == "bolted":
+        #     if no_of_bolts == "2":
+        #         alpha = 0.6
+        #     elif no_of_bolts == "3":
+        #         alpha = 0.7
+        #     else:
+        #         aplha = 0.8
+        # else:
+        #     alpha = 0.8
+
+        if no_of_bolts <= 2:
+            alpha = 0.6
+        elif no_of_bolts == 3:
+            alpha = 0.7
+        else:
+            alpha = 0.8
+
+        gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
+        T_pdn = alpha * A_n * F_u / gamma_m1
+
+        return T_pdn
+
+    # cl 6.3 Design Strength Due to Rupture of critical section
+    @staticmethod
+    def tension_member_design_due_to_rupture_of_critical_section(A_n, F_u):
+        "preliminary design strength,T_pdn,as governed by rupture at net section"
+        "A_n = net area of the total cross-section"
+        "A_nc = net area of the connected leg"
+        "A_go = gross area of the outstanding leg"
+        "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
+        "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
+        "F_u = Ultimate Strength of material"
+        "w = outstanding leg width"
+        "b_s = shear lag width"
+        "t = thickness of the leg"
+        "Lc = length of the end connection"
+
+        # if connection_type == "bolted":
+        #     if no_of_bolts == "2":
+        #         alpha = 0.6
+        #     elif no_of_bolts == "3":
+        #         alpha = 0.7
+        #     else:
+        #         aplha = 0.8
+        # else:
+        #     alpha = 0.8
+
+        gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
+        T_pdn = 0.9 * A_n * F_u / gamma_m1
+
+        return T_pdn
+
+    # cl 6.3 Design Strength Due to Rupture of critical section
+    @staticmethod
+    def tension_angle_member_design_due_to_rupture_of_critical_section(A_nc, A_go, F_u, F_y, L_c, w, b_s, t):
+        "design strength,T_dn,as governed by rupture at net section"
+        "A_n = net area of the total cross-section"
+        "A_nc = net area of the connected leg"
+        "A_go = gross area of the outstanding leg"
+        "alpha_b,alpha_w = 0.6 - two bolts, 0.7 - three bolts or 0.8 - four or more bolts/welded"
+        "gamma_m1 = partial safety factor for failure in tension by ultimate stress"
+        "F_u = Ultimate Strength of material"
+        "w = outstanding leg width"
+        "b_s = shear lag width"
+        "t = thickness of the leg"
+        "L_c = length of the end connection"
+        "gamma_m0 = partial safety factor for failure in tension by yielding"
+        "F_y = yield stress of the material"
+
+        gamma_m0 = IS800_2007.cl_5_4_1_Table_5["gamma_m0"]['yielding']
+        gamma_m1 = IS800_2007.cl_5_4_1_Table_5["gamma_m1"]['ultimate_stress']
+
+        beta = float(1.4 - (0.076 * float(w) / float(t) * float(F_y) / float(F_u) * float(b_s) / float(L_c)))
+        print(beta)
+
+        if beta <= (F_u * gamma_m0 / F_y * gamma_m1) and beta >= 0.7:
+            beta = beta
+        else:
+            beta = 0.7
+
+        T_dn = (0.9 * A_nc * F_u / gamma_m1) + (beta * A_go * F_y / gamma_m0)
+
+        return T_dn
 
     # cl. 6.4.1 Block shear strength of bolted connections
     @staticmethod
