@@ -10,7 +10,7 @@ from svg_window import SvgWindow
 from ui_tutorial import Ui_Tutorial
 from ui_aboutosdag import Ui_AboutOsdag
 from ui_ask_question import Ui_AskQuestion
-from Tension_calc import tension_design
+from Tension_calc import tension_welded_design
 # import bc_endplate_calc as db_value
 # from ui_weld_details_1 import Ui_Weld_Details_1
 # from ui_weld_details_2 import Ui_Weld_Details_2
@@ -2712,7 +2712,7 @@ def set_osdaglogger():
 	logger.addHandler(fh)
 
 
-def launch_tension_controller(osdagMainWindow, folder):
+def launch_tension_bolted_controller(osdagMainWindow, folder):
 	set_osdaglogger()
 	# --------------- To display log messages in different colors ---------------
 	rawLogger = logging.getLogger("raw")

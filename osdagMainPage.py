@@ -10,7 +10,7 @@ from PyQt5 import Qt
 
 from PyQt5.QtCore import pyqtSlot,pyqtSignal, QObject
 from PyQt5.QtWidgets import QMainWindow, QDialog,QMessageBox, QFileDialog, QApplication
-from ui_OsdagMainPage import Ui_MainWindow
+from ui_OsdagMainPage_new import Ui_MainWindow
 from ui_tutorial import Ui_Tutorial
 from ui_aboutosdag import Ui_AboutOsdag
 from ui_ask_question import Ui_AskQuestion
@@ -23,7 +23,7 @@ from Connections.Shear.Endplate.endPlateMain import launch_endplate_controller
 from Connections.Moment.BBSpliceCoverPlate.BBSpliceCoverPlateBolted.coverplate_bolted_main import launch_coverplate_controller
 from Connections.Moment.ExtendedEndPlate.extended_main import launch_extendedendplate_controller
 from Connections.Moment.BCEndPlate.bc_endplate_main import launch_bc_endplate_controller
-from Tension.Tension_main import launch_tension_controller
+from Tension.Tension_bolted_main import launch_tension_bolted_controller
 import os.path
 import subprocess
 import shutil
@@ -61,7 +61,7 @@ class OsdagMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.showMaximized()
-        list_of_items = {'Osdagpage': 0, 'connectionpage': 1, 'beamtobeampage': 2, 'beamtocolumnpage': 3,'compressionpage': 4, 'flexuralpage': 5}
+        list_of_items = {'Osdagpage': 0, 'connectionpage': 1, 'Tension': 2, 'beamtocolumnpage': 3,'compressionpage': 4, 'flexuralpage': 5}
 
         self.ui.myStackedWidget.setCurrentIndex(list_of_items['Osdagpage'])
         self.ui.btn_connection.clicked.connect(lambda: self.change_desgin_page(list_of_items['connectionpage'], list_of_items['Osdagpage']))
@@ -69,7 +69,7 @@ class OsdagMainWindow(QMainWindow):
         self.ui.btn_start.clicked.connect(self.show_shear_connection)
         self.ui.btn_start_2.clicked.connect(self.show_moment_connection)
         self.ui.btn_start_3.clicked.connect(self.show_moment_connection_bc)
-
+        self.ui.Tension_Start.clicked.connect(self.show_tension)
 
         self.ui.btn_beamCol.clicked.connect(self.unavailable)
         self.ui.btn_compression.clicked.connect(self.unavailable)
@@ -78,7 +78,7 @@ class OsdagMainWindow(QMainWindow):
         self.ui.btn_2dframe.clicked.connect(self.unavailable)
         self.ui.btn_3dframe.clicked.connect(self.unavailable)
         self.ui.btn_groupdesign.clicked.connect(self.unavailable)
-        self.ui.btn_tension.clicked.connect(self.show_tension)
+        self.ui.btn_tension.clicked.connect(lambda: self.change_desgin_page(list_of_items['Tension'], list_of_items['Osdagpage']))
         self.ui.btn_plate.clicked.connect(self.unavailable)
         self.ui.comboBox_help.setCurrentIndex(0)
         self.ui.comboBox_help.currentIndexChanged.connect(self.selection_change)
@@ -296,14 +296,18 @@ class OsdagMainWindow(QMainWindow):
                     shutil.rmtree(os.path.join(folder, create_folder))
                     os.mkdir(os.path.join(root_path, create_folder))
 
+        if self.ui.rdbtn_bolted.isChecked():
+            launch_tension_bolted_controller(self, folder)
+            self.ui.myStackedWidget.setCurrentIndex(0)
 
-
+        else:
+            QMessageBox.about(self, "INFO", "Please select appropriate connection")
         # if self.ui.btn_tension.isChecked():
-        launch_tension_controller(self, folder)
-            # self.ui.myStackedWidget.setCurrentIndex(0)
-
-        # else:
-        #     QMessageBox.about(self, "INFO", "Please select appropriate connection")
+        # launch_tension_controller(self, folder)
+        #     # self.ui.myStackedWidget.setCurrentIndex(0)
+        #
+        # # else:
+        # #     QMessageBox.about(self, "INFO", "Please select appropriate connection")
 
     # ********************************* Help Action *********************************************************************************************
 
