@@ -24,6 +24,7 @@ from Connections.Moment.BBSpliceCoverPlate.BBSpliceCoverPlateBolted.coverplate_b
 from Connections.Moment.ExtendedEndPlate.extended_main import launch_extendedendplate_controller
 from Connections.Moment.BCEndPlate.bc_endplate_main import launch_bc_endplate_controller
 from Tension.Tension_bolted_main import launch_tension_bolted_controller
+from Tension.Tension_welded_main import launch_tension_welded_controller
 import os.path
 import subprocess
 import shutil
@@ -299,7 +300,12 @@ class OsdagMainWindow(QMainWindow):
         if self.ui.rdbtn_bolted.isChecked():
             launch_tension_bolted_controller(self, folder)
             self.ui.myStackedWidget.setCurrentIndex(0)
+        # else:
+        #     QMessageBox.about(self, "INFO", "Please select appropriate connection")
 
+        elif self.ui.rdbtn_welded.isChecked():
+            launch_tension_welded_controller(self, folder)
+            self.ui.myStackedWidget.setCurrentIndex(0)
         else:
             QMessageBox.about(self, "INFO", "Please select appropriate connection")
         # if self.ui.btn_tension.isChecked():

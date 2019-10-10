@@ -1,4 +1,4 @@
-from tension_ui import Ui_MainWindow
+from tension_bolted_ui import Ui_MainWindow
 from ui_design_preferences import Ui_DesignPreferences
 from ui_design_summary import Ui_DesignReport
 # from ui_plate import Ui_Plate

@@ -34,7 +34,7 @@ class IS800_2007(object):
         #         design_check = True
         #     else:
         #         design_check = False
-        slender = K * L * 1000 / r
+        slender = K * L / r
 
         return slender
     """    SECTION  4     METHODS OF STRUCTURAL ANALYSIS   """

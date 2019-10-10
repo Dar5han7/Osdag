@@ -49,7 +49,7 @@ def tension_bolted_design(uiObj):
     bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
     bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
     bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
-    if conn == "Back to Back Web" or conn =="Star Angles" or conn == "Back to Back Web":
+    if conn == "Back to Back Web" or conn =="Star Angles" or conn == "Back to Back Angles":
         Plate_thickness = float(uiObj["Bolt"]["Platethickness"])
 
     dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
@@ -155,15 +155,6 @@ def tension_bolted_design(uiObj):
     #     I = min(Iyy, Izz)
     #     radius_gyration = (math.sqrt(I / (Member_Ag/100* 2))) * 10
     #
-
-    # Calculation for Design Strength Due to Yielding of Gross Section
-    tension_yielding = IS800_2007.tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
-    no_of_bolts = bolt_row
-
-    k =  IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
-    tension_slenderness = IS800_2007.design_check_for_slenderness(k,Member_length,radius_gyration)
-    radius_gyration_min = k * (Member_length * 1000)/400
-
     if conn == "Web" and Member_type != "Angles":
         Member_An = Member_Ag - (bolt_column * dia_hole * member_tw)
         if bolt_column >=2:
@@ -229,6 +220,13 @@ def tension_bolted_design(uiObj):
     else:
         pass
 
+        # Calculation for Design Strength Due to Yielding of Gross Section
+    tension_yielding = IS800_2007.tension_member_design_due_to_yielding_of_gross_section(Member_Ag, Member_fy) / 1000
+    no_of_bolts = bolt_row
+
+    k = IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
+    tension_slenderness = IS800_2007.design_check_for_slenderness(k, Member_length, radius_gyration)
+    radius_gyration_min = k * (Member_length) / 400
     # cl 6.2 Design Strength Due to Block Shear
     tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
     # Calculation for Design Strength Due to Yielding of Gross Section
@@ -301,16 +299,19 @@ def tension_welded_design(uiObj):
     Member_length = float(uiObj["Member"]["Member_length"])
     Tension_load = float(uiObj["Load"]["AxialForce (kN)"])
 
-    bolt_dia = int(uiObj['Bolt']['Diameter (mm)'])
-    bolt_row = int(uiObj["Bolt"]["RowsofBolts"])
-    bolt_column = int(uiObj["Bolt"]["ColumnsofBolts"])
-    bolt_row_pitch = float(uiObj["Bolt"]["Rowpitch"])
-    bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
-    bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
-    bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
-    Plate_thickness =  float(uiObj["Bolt"]["Platethickness"])
+    # bolt_dia = int(uiObj['Bolt']['Diameter (mm)'])
+    # bolt_row = int(uiObj["Bolt"]["RowsofBolts"])
+    # bolt_column = int(uiObj["Bolt"]["ColumnsofBolts"])
+    # bolt_row_pitch = float(uiObj["Bolt"]["Rowpitch"])
+    # bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
+    # bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
+    # bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
+    Plate_thickness =  float(uiObj["Weld"]["Platethickness"])
+    Inline_Weld = float(uiObj["Weld"]["inline_tension"])
+    Oppline_Weld = float(uiObj["Weld"]["oppline_tension"])
 
-    dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
+
+    # dia_hole = bolt_dia + int(uiObj["bolt"]["bolt_hole_clrnce"])
     end1_cond1 = uiObj["Support_Condition"]["end1_cond1"]
     end1_cond2 = uiObj["Support_Condition"]["end1_cond2"]
     end2_cond1 = uiObj["Support_Condition"]["end2_cond1"]
@@ -415,44 +416,35 @@ def tension_welded_design(uiObj):
     #
 
     # Calculation for Design Strength Due to Yielding of Gross Section
-    tension_yielding = IS800_2007.tension_member_design_due_to_yielding_of_gross_section(Member_Ag,Member_fy)/1000
-    no_of_bolts = bolt_row
-
-    k =  IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
-    tension_slenderness = IS800_2007.design_check_for_slenderness(k,Member_length,radius_gyration)
-    radius_gyration_min = k * (Member_length * 1000)/400
 
     if conn == "Web" and Member_type != "Angles":
-        Member_An = Member_Ag - (bolt_column * dia_hole * member_tw)
-        if bolt_column >=2:
-            A_vg = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance)*member_tw)*2
-            A_vn = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance - ((bolt_row -0.5)*dia_hole)) * member_tw)*2
-            A_tg = bolt_column_pitch* (bolt_column - 1)  * member_tw
-            A_tn = (bolt_column_pitch*(bolt_column-1) - ((1)*dia_hole)) * member_tw
-        else:
-            A_vg = (bolt_row_pitch + bolt_enddistance) * member_tw
-            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tw)
-            A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw
-            A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw
+        Member_An = Member_Ag
+        A_vg = Inline_Weld * member_tw
+        A_vn = A_vg
+        A_tg = Oppline_Weld * member_tw
+        A_tn = A_tg
+
+    elif conn == "Leg" and Member_type == "Angles":
+        Member_An = Member_Ag
+        A_vg = 0
+        A_vn = 0
+        A_tg = 0
+        A_tn = 0
+
     elif conn == "Back to Back Web":
         Member_Ag = float (dictmemberdata["Area"]) * 100 *2
-        Member_An = Member_Ag - (bolt_column * dia_hole * 2* member_tw)
-        if bolt_column >=2:
-            A_vg = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance)*member_tw)*2*2
-            A_vn = ((bolt_row_pitch*(bolt_row-1) + bolt_enddistance - ((bolt_row -0.5)*dia_hole)) * member_tw)*2*2
-            A_tg = bolt_column_pitch* (bolt_column - 1)  * member_tw*2
-            A_tn = (bolt_column_pitch*(bolt_column-1) - ((1)*dia_hole)) * member_tw*2
-        else:
-            A_vg = (bolt_row_pitch + bolt_enddistance) * member_tw*2
-            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tw)*2
-            A_tg = (bolt_column_pitch + bolt_edgedistance)* member_tw*2
-            A_tn = (bolt_column_pitch + bolt_edgedistance - 0.5* dia_hole) * member_tw*2
-    elif conn=="Flange" and Member_type != "Angles":
-            Member_An = Member_Ag - (member_d * member_tw/2) - (bolt_column * dia_hole * member_tf)
-            A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2 * 2
-            A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * member_tf) * 2 * 2
-            A_tg = (bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) * member_tf * 2 * 2
-            A_tn = ((bolt_column_pitch*(bolt_column/2 -1) + bolt_edgedistance) - (bolt_column/2 -0.5) * dia_hole) * member_tf * 2 * 2
+        Member_An = Member_Ag
+        A_vg = 0
+        A_vn = 0
+        A_tg = 0
+        A_tn = 0
+
+    elif conn=="Flange":
+        Member_An = Member_Ag
+        A_vg = Inline_Weld * member_tf
+        A_vn = A_vg
+        A_tg = Oppline_Weld * member_tf
+        A_tn = A_tg
         # elif Member_type == "Channels":
         #     Member_An = Member_Ag -(member_d * member_tw/2) - (bolt_column * dia_hole * member_tf)
         #     A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * member_tf) * 2
@@ -466,37 +458,50 @@ def tension_welded_design(uiObj):
         #     A_tg = (bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) * member_tf * 2
         #     A_tn = ((bolt_column_pitch * (bolt_column / 2 - 1) + bolt_edgedistance) - (bolt_column / 2 - 0.5) * dia_hole) * member_tf * 2
 
-    elif conn == "Back to Back Angles" and conn == "Star Angles":
-        Member_Ag = float(dictmemberdata["Area"]) * 100*2
-        Member_An = Member_Ag - (bolt_column * dia_hole * 2* t)
-        A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)*2
-        A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * t)*2
-        A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t*2
-        A_tn = ((((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)) - (((bolt_column -0.5) * dia_hole))) * t*2
-    else:
-        Member_An = Member_Ag - (bolt_column * dia_hole * t)
-        A_vg = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance) * t)
-        A_vn = ((bolt_row_pitch * (bolt_row - 1) + bolt_enddistance - ((bolt_row - 0.5) * dia_hole)) * t)
-        A_tg = ((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)* t
-        A_tn = ((((bolt_column_pitch * (bolt_column - 1)) + bolt_edgedistance)) - (((bolt_column -0.5) * dia_hole))) * t
+    elif conn=="Back to Back Angles" or conn == "Star Angles":
+        Member_Ag = float(dictmemberdata["Area"]) * 100 * 2
+        Member_An = Member_Ag
+        A_vg = 0
+        A_vn = 0
+        A_tg = 0
+        A_tn = 0
 
-    if Member_type == "Angles":
-        w = max(float(leg1), float(leg2))
-        shear_lag = ((min(float(leg1), float(leg2)))-bolt_edgedistance) + w - t
-        L_c = (bolt_row_pitch * (bolt_row - 1))
     else:
         pass
 
-    # cl 6.2 Design Strength Due to Block Shear
-    tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
+
+    if Member_type == "Angles":
+        w = max(float(leg1), float(leg2))
+        shear_lag = w
+        L_c = Inline_Weld/2
+    else:
+        pass
     # Calculation for Design Strength Due to Yielding of Gross Section
-    if (Member_type == "Angles")and bolt_row > 1 :
+    tension_yielding = IS800_2007.tension_member_design_due_to_yielding_of_gross_section(Member_Ag, Member_fy) / 1000
+    # no_of_bolts = bolt_row
+
+    k = IS800_2007.effective_length_coefficeint(end1_cond1, end1_cond2, end2_cond1, end2_cond2)
+    tension_slenderness = IS800_2007.design_check_for_slenderness(k, Member_length, radius_gyration)
+    radius_gyration_min = k * (Member_length) / 400
+
+    # cl 6.2 Design Strength Due to Block Shear
+    if Member_type !="Angles" or conn == "Back to Back Web":
+        tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
+    else:
+        tension_blockshear = 0
+
+    if Member_type == "Angles":
         tension_rupture =IS800_2007.tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
     else:
         tension_rupture =IS800_2007.tension_member_design_due_to_rupture_of_critical_section(Member_An, Member_fu)/1000
 
+
     tension_design = min(tension_blockshear,tension_rupture,tension_yielding)
 
+    if tension_design == 0:
+        tension_design = min(tension_rupture,tension_yielding)
+    else:
+        pass
 
  # End of Calculation, SAMPLE Output dictionary
     outputobj = dict()
@@ -535,6 +540,8 @@ def tension_welded_design(uiObj):
     else:
         logger.error(":Member fails for the applied tension load \n ")
         logger.debug(" :=========End Of design===========")
+
+    outputobj['Tension_Force']['Design_Status'] = design_status
 
     return outputobj
 

@@ -2873,7 +2873,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>680</y>
+       <y>650</y>
        <width>100</width>
        <height>30</height>
       </rect>
@@ -2902,7 +2902,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>680</y>
+       <y>650</y>
        <width>100</width>
        <height>30</height>
       </rect>
@@ -3055,7 +3055,7 @@ QMenu::item:selected {
       </font>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Bolt&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Weld&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -3098,183 +3098,13 @@ QMenu::item:selected {
       <string>Axial Force (kN) *</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="txt_rowpitch">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>350</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_beam1_6">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>350</y>
-       <width>131</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Row Pitch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txt_columpitch">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>380</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txt_Enddistance">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>410</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_beam1_7">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>410</y>
-       <width>131</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;End Distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_beam1_8">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>380</y>
-       <width>131</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Column Pitch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="combo_diameter">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>440</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QComboBox { combobox-popup: 0; }</string>
-     </property>
-     <property name="maxVisibleItems">
-      <number>5</number>
-     </property>
-     <item>
-      <property name="text">
-       <string>Select diameter</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>12</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>16</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>20</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>24</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>30</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>36</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QLabel" name="lbl_beam1_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
+       <y>300</y>
        <width>131</width>
-       <height>21</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="font">
@@ -3285,14 +3115,19 @@ QMenu::item:selected {
       </font>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No of Rows of Bolts &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Total Length in line &lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;with tension&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="txt_rowsofbolts">
+    <widget class="QLineEdit" name="txt_inline_tension">
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>290</y>
+       <y>310</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3303,63 +3138,6 @@ QMenu::item:selected {
        <weight>50</weight>
        <bold>false</bold>
       </font>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txt_columssofbolts">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>320</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>440</y>
-       <width>131</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Diameter (mm) &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_beam1_5">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>320</y>
-       <width>151</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No of Column of Bolts&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="txt_Member_length">
@@ -3403,7 +3181,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>560</y>
+       <y>500</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3442,7 +3220,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>620</y>
+       <y>560</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3481,7 +3259,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>570</y>
+       <y>510</y>
        <width>131</width>
        <height>16</height>
       </rect>
@@ -3498,45 +3276,6 @@ QMenu::item:selected {
      </property>
     </widget>
     <widget class="QComboBox" name="combo_end2_cond2">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>650</y>
-       <width>160</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QComboBox { combobox-popup: 0; }</string>
-     </property>
-     <property name="maxVisibleItems">
-      <number>5</number>
-     </property>
-     <item>
-      <property name="text">
-       <string>Rotation</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Free</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Restrained</string>
-      </property>
-     </item>
-    </widget>
-    <widget class="QComboBox" name="combo_end1_cond2">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -3575,11 +3314,50 @@ QMenu::item:selected {
       </property>
      </item>
     </widget>
+    <widget class="QComboBox" name="combo_end1_cond2">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>530</y>
+       <width>160</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>11</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox { combobox-popup: 0; }</string>
+     </property>
+     <property name="maxVisibleItems">
+      <number>5</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Rotation</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Free</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Restrained</string>
+      </property>
+     </item>
+    </widget>
     <widget class="QLabel" name="label_10">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>630</y>
+       <y>570</y>
        <width>131</width>
        <height>16</height>
       </rect>
@@ -3599,7 +3377,7 @@ QMenu::item:selected {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>540</y>
+       <y>480</y>
        <width>151</width>
        <height>25</height>
       </rect>
@@ -3638,7 +3416,7 @@ QMenu::item:selected {
      </property>
      <item>
       <property name="text">
-       <string>Bolted</string>
+       <string>Welded</string>
       </property>
      </item>
      <item>
@@ -3717,31 +3495,11 @@ QMenu::item:selected {
       <number>5</number>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_edgedistance">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>470</y>
-       <width>131</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edge Distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txt_Edgedistance">
+    <widget class="QLineEdit" name="txt_oppline_tension">
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>470</y>
+       <y>370</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3752,13 +3510,38 @@ QMenu::item:selected {
        <weight>50</weight>
        <bold>false</bold>
       </font>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_beam1_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>360</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Total Length opp&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;line with tension&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="txt_plate_thk">
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>500</y>
+       <x>147</x>
+       <y>417</y>
        <width>160</width>
        <height>27</height>
       </rect>
@@ -3770,14 +3553,17 @@ QMenu::item:selected {
        <bold>false</bold>
       </font>
      </property>
+     <property name="text">
+      <string/>
+     </property>
     </widget>
-    <widget class="QLabel" name="lbl_edgedistance_4">
+    <widget class="QLabel" name="lbl_axial_2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>500</y>
-       <width>131</width>
-       <height>21</height>
+       <y>420</y>
+       <width>121</width>
+       <height>25</height>
       </rect>
      </property>
      <property name="font">
@@ -3788,7 +3574,7 @@ QMenu::item:selected {
       </font>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plate thk (mm)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Plate Thickness</string>
      </property>
     </widget>
    </widget>
