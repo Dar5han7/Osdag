@@ -1111,7 +1111,82 @@ class Top_View(object):
 			ptA16y = ptA12y - self.data_object.t
 			self.A16 = np.array([ptA16x, ptA16y])
 
-#
+		elif self.data_object.conn_loc == "Star Angles":
+
+			ptA1x = 0
+			ptA1y = 0
+			self.A1 = np.array([ptA1x, ptA1y])
+
+			ptA2x = ptA1x + self.data_object.member_length
+			ptA2y = 0
+			self.A2 = np.array([ptA2x, ptA2y])
+
+			if self.data_object.weld_oppline > self.data_object.leg_min:
+				ptA3x = ptA2x
+				ptA3y = ptA2y + self.data_object.leg_max
+				self.A3 = np.array([ptA3x, ptA3y])
+			else:
+				ptA3x = ptA2x
+				ptA3y = ptA2y + self.data_object.leg_min
+				self.A3 = np.array([ptA3x, ptA3y])
+
+			ptA4x = ptA1x
+			ptA4y = ptA3y
+			self.A4 = np.array([ptA4x, ptA4y])
+
+			ptA5x = ptA1x
+			ptA5y = ptA1y + self.data_object.t
+			self.A5 = np.array([ptA5x, ptA5y])
+
+			ptA6x = ptA2x
+			ptA6y = ptA2y + self.data_object.t
+			self.A6 = np.array([ptA6x, ptA6y])
+
+			ptA7x = ptA1x + self.data_object.weld_inline / 2
+			ptA7y = ptA1y
+			self.A7 = np.array([ptA7x, ptA7y])
+
+			ptA8x = ptA7x
+			ptA8y = ptA7y - 12
+			self.A8 = np.array([ptA8x, ptA8y])
+
+			ptA9x = ptA8x - self.data_object.weld_inline
+			ptA9y = ptA8y
+			self.A9 = np.array([ptA9x, ptA9y])
+
+			ptA10x = ptA9x
+			ptA10y = ptA9y + 12
+			self.A10 = np.array([ptA10x, ptA10y])
+
+			ptA11x = ptA1x
+			ptA11y = ptA1y - 12
+			self.A11 = np.array([ptA11x, ptA11y])
+
+			ptA12x = ptA11x + self.data_object.member_length
+			ptA12y = ptA11y
+			self.A12 = np.array([ptA12x, ptA12y])
+
+			if self.data_object.weld_oppline > self.data_object.leg_min:
+				ptA13x = ptA12x
+				ptA13y = ptA12y - self.data_object.leg_max
+				self.A13 = np.array([ptA13x, ptA13y])
+			else:
+				ptA13x = ptA12x
+				ptA13y = ptA12y - self.data_object.leg_min
+				self.A13 = np.array([ptA13x, ptA13y])
+
+			ptA14x = ptA11x
+			ptA14y = ptA13y
+			self.A14 = np.array([ptA14x, ptA14y])
+
+			ptA15x = ptA11x
+			ptA15y = ptA11y - self.data_object.t
+			self.A15 = np.array([ptA15x, ptA15y])
+
+			ptA16x = ptA12x
+			ptA16y = ptA12y - self.data_object.t
+			self.A16 = np.array([ptA16x, ptA16y])
+
 	def call_Top_View(self, filename):
 		"""
 
@@ -1139,6 +1214,27 @@ class Top_View(object):
 			dwg.add(dwg.line(self.A10, self.A1).stroke('blue', width=2.5, linecap='square'))
 
 		elif self.data_object.conn_loc == "Back to Back Angles":
+			wd = int((self.data_object.member_length) + 1000)
+			if self.data_object.weld_oppline > self.data_object.leg_min:
+				ht = int(self.data_object.leg_max + 800)
+			else:
+				ht = int(self.data_object.leg_min + 800)
+			dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
+				'-600 -400 {} {}').format(wd, ht))
+			dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A1], stroke='blue', fill='none',
+								 stroke_width=2.5))
+			dwg.add(dwg.line(self.A5, self.A6).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A8, self.A7).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A8, self.A9).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A10, self.A9).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A10, self.A1).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A11, self.A14).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A14, self.A13).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A12, self.A13).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A12, self.A8).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=2.5, linecap='square'))
+
+		elif self.data_object.conn_loc == "Star Angles":
 			wd = int((self.data_object.member_length) + 1000)
 			if self.data_object.weld_oppline > self.data_object.leg_min:
 				ht = int(self.data_object.leg_max + 800)
