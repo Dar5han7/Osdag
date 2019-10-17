@@ -795,6 +795,7 @@ class Maincontroller(QMainWindow):
 		self.ui.txt_Fy.editingFinished.connect(
 			lambda: self.validate_fu_fy(self.ui.txt_Fu, self.ui.txt_Fy, self.ui.txt_Fy, self.ui.lbl_fy))
 
+
 		from osdagMainSettings import backend_name
 		self.display, _ = self.init_display(backend_str=backend_name())
 		self.uiObj = None
@@ -1720,6 +1721,21 @@ class Maincontroller(QMainWindow):
 			QMessageBox.about(self, "Error", "Please enter a value between %s-%s" % (min_val, max_val))
 			widget.clear()
 			widget.setFocus()
+
+	# def check_weld_range(self, widget, min_weld_length, max_weld_length):
+	# 	"""
+	# 	Args:
+	# 		widget: Fu , Fy lineedit
+	# 		min_val: min value
+	# 		max_val: max value
+	# 	Returns: Check for the value mentioned for the given range
+	# 	"""
+	# 	text_str = widget.text()
+	# 	text_str = int(text_str)
+	# 	if (text_str < min_weld_length or text_str > max_weld_length or text_str == ''):
+	# 		QMessageBox.about(self, "Error", "Please enter a value between %s-%s" % (min_weld_length, max_weld_length))
+	# 		widget.clear()
+	# 		widget.setFocus()
 
 	def validate_fu_fy(self, fu_widget, fy_widget, current_widget, lblwidget):
 		'''(QlineEdit,QLable,Number,Number)---> NoneType

@@ -30,7 +30,7 @@ class Tension_drawing(object):
 		self.section_type = input_dict["Member"]["SectionType"]
 		self.conn_loc = input_dict["Member"]["Location"]
 		self.act_member_length = float(input_dict["Member"]["Member_length"])
-		self.member_length = 1000
+		self.member_length = 750
 		self.weld_inline = float(input_dict["Weld"]["inline_tension"])
 		self.weld_oppline = float(input_dict["Weld"]["oppline_tension"])
 		self.beam_designation = memb_data['Designation']
@@ -280,7 +280,7 @@ class Tension_drawing(object):
 		"""
 		# Right Up.
 		theta = math.radians(theta)
-		char_width = 16
+		char_width = 14
 		x_vector = np.array([1, 0])
 		y_vector = np.array([0, 1])
 
@@ -614,7 +614,7 @@ class Front_View(object):
 			self.A8 = np.array([ptA8x, ptA8y])
 
 			ptA9x = ptA1x + self.data_object.weld_inline / 2
-			ptA9y = ptA1y + self.data_object.member_d/2- self.data_object.weld_oppline
+			ptA9y = ptA1y + self.data_object.member_d/2- self.data_object.weld_oppline/2
 			self.A9 = np.array([ptA9x, ptA9y])
 
 			ptA9ax = ptA1x + self.data_object.weld_inline / 2
@@ -622,7 +622,7 @@ class Front_View(object):
 			self.A9a = np.array([ptA9ax, ptA9ay])
 
 			ptA10x = ptA9x
-			ptA10y = ptA9y + 2 * self.data_object.weld_oppline
+			ptA10y = ptA9y +  self.data_object.weld_oppline
 			self.A10 = np.array([ptA10x, ptA10y])
 
 			ptA10ax = ptA4x + self.data_object.weld_inline / 2
@@ -821,6 +821,16 @@ class Front_View(object):
 			ptA16y = ptA13y
 			self.A16 = np.array([ptA16x, ptA16y])
 
+			# ------------------------------------------  Weld triangle  UP-------------------------------------------
+			self.B1 = self.A9
+			self.B2 = self.A9 + 12 * np.array([1, 0])
+			self.B3 = self.A9 + 12 * np.array([0, -1])
+
+			# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+			self.B4 = self.A13
+			self.B5 = self.A13 + 12 * np.array([1, 0])
+			self.B6 = self.A13 + 12 * np.array([0, 1])
+
 		else:
 			pass
 
@@ -916,12 +926,14 @@ class Front_View(object):
 				pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
 				dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 2, 8),
 								 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-				dwg.add(
-					dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)",
+				dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)",
 							 stroke='white', stroke_width=1.0))
-				dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([1, 0])), size=(8, self.data_object.weld_oppline),
-								 fill="url(#diagonalHatch)",
-								 stroke='white', stroke_width=1.0))
+				if self.data_object.conn_loc == "Back to Back Web":
+					dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([1, 0])), size=(8, self.data_object.weld_oppline/2),
+									 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+				else:
+					dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([1, 0])), size=(8, self.data_object.weld_oppline),
+									 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
 			else:
 				dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=2.5, linecap='square'))
 				dwg.add(dwg.line(self.A12, self.A12a).stroke('blue', width=2.5, linecap='square'))
@@ -958,6 +970,18 @@ class Front_View(object):
 			dwg.add(dwg.line(self.A14, self.A15).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A16, self.A4).stroke('blue', width=2.5, linecap='square'))
+			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
+											   patternTransform="rotate(45 2 2)"))
+			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
+			dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 4, 8),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+			dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 4, 8), fill="url(#diagonalHatch)",
+						 stroke='white', stroke_width=1.0))
+			dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+								 stroke_width=2.5))
+			dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+								 stroke_width=2.5))
+
 		else:
 			pass
 		# ------------------------------------------  Beam Designation Labeling  -------------------------------------------
@@ -969,8 +993,35 @@ class Front_View(object):
 		element = " "
 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NW", offset, textup, textdown, element)
 
+		# ------------------------------------------  Dimensions Labeling  -------------------------------------------------
+		ptx1 = self.A4
+		pty1 = ptx1 + (100) * np.array([0, 1])
+		self.data_object.draw_faint_line(ptx1, pty1, dwg)
+
+		ptx2 = self.A3
+		pty2 = ptx2 + (100) * np.array([0, 1])
+		self.data_object.draw_faint_line(ptx2, pty2, dwg)
+
+		point1 = ptx2 - (self.data_object.member_length) * np.array([1, 0])
+		params = {"offset": -100, "textoffset": 10, "lineori": "right", "endlinedim": 10, "arrowlen": 20}
+		self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.act_member_length),
+													params)
+
+		# ptx3 = self.A4
+		# pty1 = ptx1 + (100) * np.array([0, 1])
+		# self.data_object.draw_faint_line(ptx1, pty1, dwg)
+		#
+		# ptx2 = self.A3
+		# pty2 = ptx2 + (100) * np.array([0, 1])
+		# self.data_object.draw_faint_line(ptx2, pty2, dwg)
+		#
+		# point1 = ptx2 - (self.data_object.member_length) * np.array([1, 0])
+		# params = {"offset": -150, "textoffset": 10, "lineori": "right", "endlinedim": 10, "arrowlen": 20}
+		# self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.act_member_length),
+		# 											params)
+
 		# ------------------------------------------  View details-------------------------------------------
-		ptx = self.A4 + ((self.data_object.member_length/2)-300)* np.array([1, 0]) + 150 * np.array([0, 1])
+		ptx = self.A4 + ((self.data_object.member_length/2)-300)* np.array([1, 0]) + 250 * np.array([0, 1])
 		dwg.add(dwg.text('Front view (Sec C-C) ', insert=ptx, fill='black', font_family="sans-serif", font_size=35))
 		ptx1 = ptx + 40 * np.array([0, 1])
 		dwg.add(dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif", font_size=35))
@@ -1187,6 +1238,222 @@ class Top_View(object):
 			ptA16y = ptA12y - self.data_object.t
 			self.A16 = np.array([ptA16x, ptA16y])
 
+		elif (self.data_object.conn_loc == "Web" and (self.data_object.section_type == "Columns" or self.data_object.section_type == "Beams")):
+
+			ptA1x = 0
+			ptA1y = 0
+			self.A1 = np.array([ptA1x, ptA1y])
+
+			ptA2x = ptA1x + self.data_object.member_length
+			ptA2y = 0
+			self.A2 = np.array([ptA2x, ptA2y])
+
+			# if self.data_object.weld_oppline > self.data_object.leg_min:
+			ptA3x = ptA2x
+			ptA3y = ptA2y + self.data_object.member_B
+			self.A3 = np.array([ptA3x, ptA3y])
+			# else:
+			# 	ptA3x = ptA2x
+			# 	ptA3y = ptA2y + self.data_object.leg_min
+			# 	self.A3 = np.array([ptA3x, ptA3y])
+
+			ptA4x = ptA1x
+			ptA4y = ptA3y
+			self.A4 = np.array([ptA4x, ptA4y])
+
+			ptA5x = ptA1x
+			ptA5y = ptA1y + self.data_object.member_B/2 - self.data_object.member_tw/2
+			self.A5 = np.array([ptA5x, ptA5y])
+
+			ptA6x = ptA5x + self.data_object.member_length
+			ptA6y = ptA5y
+			self.A6 = np.array([ptA6x, ptA6y])
+
+			ptA7x = ptA6x
+			ptA7y = ptA5y + self.data_object.member_tw
+			self.A7 = np.array([ptA7x, ptA7y])
+
+			ptA8x = ptA5x
+			ptA8y = ptA7y
+			self.A8 = np.array([ptA8x, ptA8y])
+
+			ptA9x = ptA8x + self.data_object.weld_inline/2
+			ptA9y = ptA8y
+			self.A9 = np.array([ptA9x, ptA9y])
+
+			ptA10x = ptA9x
+			ptA10y = ptA9y + 12
+			self.A10 = np.array([ptA10x, ptA10y])
+
+			ptA11x = ptA8x
+			ptA11y = ptA8y + 12
+			self.A11 = np.array([ptA11x, ptA11y])
+
+			ptA12x = ptA11x - self.data_object.weld_inline/2
+			ptA12y = ptA11y
+			self.A12 = np.array([ptA12x, ptA12y])
+
+			# if self.data_object.weld_oppline > self.data_object.leg_min:
+			ptA13x = ptA12x
+			ptA13y = ptA12y - 12
+			self.A13 = np.array([ptA13x, ptA13y])
+
+		elif self.data_object.conn_loc == "Web" and self.data_object.section_type == "Channels":
+
+			ptA1x = 0
+			ptA1y = 0
+			self.A1 = np.array([ptA1x, ptA1y])
+
+			ptA2x = ptA1x + self.data_object.member_length
+			ptA2y = 0
+			self.A2 = np.array([ptA2x, ptA2y])
+
+			ptA3x = ptA2x
+			ptA3y = ptA2y + self.data_object.member_B
+			self.A3 = np.array([ptA3x, ptA3y])
+
+			ptA4x = ptA1x
+			ptA4y = ptA3y
+			self.A4 = np.array([ptA4x, ptA4y])
+
+			ptA5x = ptA1x
+			ptA5y = ptA1y + self.data_object.member_tw
+			self.A5 = np.array([ptA5x, ptA5y])
+
+			ptA6x = ptA5x + self.data_object.member_length
+			ptA6y = ptA5y
+			self.A6 = np.array([ptA6x, ptA6y])
+
+			ptA9x = ptA5x + self.data_object.weld_inline/2
+			ptA9y = ptA5y
+			self.A9 = np.array([ptA9x, ptA9y])
+
+			ptA10x = ptA9x
+			ptA10y = ptA9y + 12
+			self.A10 = np.array([ptA10x, ptA10y])
+
+			ptA11x = ptA5x
+			ptA11y = ptA5y + 12
+			self.A11 = np.array([ptA11x, ptA11y])
+
+			ptA12x = ptA11x - self.data_object.weld_inline/2
+			ptA12y = ptA11y
+			self.A12 = np.array([ptA12x, ptA12y])
+
+			# if self.data_object.weld_oppline > self.data_object.leg_min:
+			ptA13x = ptA12x
+			ptA13y = ptA12y - 12
+			self.A13 = np.array([ptA13x, ptA13y])
+
+		elif self.data_object.conn_loc == "Flange" and (self.data_object.section_type == "Columns" or self.data_object.section_type == "Beams"):
+
+			ptA1x = 0
+			ptA1y = 0
+			self.A1 = np.array([ptA1x, ptA1y])
+
+			ptA2x = ptA1x + self.data_object.member_length
+			ptA2y = 0
+			self.A2 = np.array([ptA2x, ptA2y])
+
+			ptA3x = ptA2x
+			ptA3y = ptA2y + self.data_object.member_B
+			self.A3 = np.array([ptA3x, ptA3y])
+
+			ptA4x = ptA1x
+			ptA4y = ptA3y
+			self.A4 = np.array([ptA4x, ptA4y])
+
+			ptA5x = ptA1x
+			ptA5y = ptA1y + self.data_object.member_B / 2 - self.data_object.member_tw / 2
+			self.A5 = np.array([ptA5x, ptA5y])
+
+			ptA6x = ptA5x + self.data_object.member_length
+			ptA6y = ptA5y
+			self.A6 = np.array([ptA6x, ptA6y])
+
+			ptA7x = ptA6x
+			ptA7y = ptA5y + self.data_object.member_tw
+			self.A7 = np.array([ptA7x, ptA7y])
+
+			ptA8x = ptA5x
+			ptA8y = ptA7y
+			self.A8 = np.array([ptA8x, ptA8y])
+
+			ptA9x = ptA1x
+			ptA9y = ptA1y - self.data_object.weld_oppline/4 + self.data_object.member_B/2
+			self.A9 = np.array([ptA9x, ptA9y])
+
+			ptA10x = ptA9x + self.data_object.weld_inline/4
+			ptA10y = ptA9y
+			self.A10 = np.array([ptA10x, ptA10y])
+
+			ptA11x = ptA10x
+			ptA11y = ptA10y + self.data_object.weld_oppline/2
+			self.A11 = np.array([ptA11x, ptA11y])
+
+			ptA12x = ptA11x - self.data_object.weld_inline/4
+			ptA12y = ptA11y
+			self.A12 = np.array([ptA12x, ptA12y])
+
+			ptA13x = ptA12x - self.data_object.weld_inline / 4
+			ptA13y = ptA12y
+			self.A13 = np.array([ptA13x, ptA13y])
+
+			ptA14x = ptA13x
+			ptA14y = ptA13y - self.data_object.weld_oppline/2
+			self.A14 = np.array([ptA14x, ptA14y])
+
+		elif self.data_object.conn_loc == "Flange" and self.data_object.section_type == "Channels":
+
+			ptA1x = 0
+			ptA1y = 0
+			self.A1 = np.array([ptA1x, ptA1y])
+
+			ptA2x = ptA1x + self.data_object.member_length
+			ptA2y = 0
+			self.A2 = np.array([ptA2x, ptA2y])
+
+			ptA3x = ptA2x
+			ptA3y = ptA2y + self.data_object.member_B
+			self.A3 = np.array([ptA3x, ptA3y])
+
+			ptA4x = ptA1x
+			ptA4y = ptA3y
+			self.A4 = np.array([ptA4x, ptA4y])
+
+			ptA5x = ptA1x
+			ptA5y = ptA1y + self.data_object.member_tw
+			self.A5 = np.array([ptA5x, ptA5y])
+
+			ptA6x = ptA5x + self.data_object.member_length
+			ptA6y = ptA5y
+			self.A6 = np.array([ptA6x, ptA6y])
+
+			ptA9x = ptA1x
+			ptA9y = ptA1y - self.data_object.weld_oppline / 4 + self.data_object.member_B / 2
+			self.A9 = np.array([ptA9x, ptA9y])
+
+			ptA10x = ptA9x + self.data_object.weld_inline / 4
+			ptA10y = ptA9y
+			self.A10 = np.array([ptA10x, ptA10y])
+
+			ptA11x = ptA10x
+			ptA11y = ptA10y + self.data_object.weld_oppline / 2
+			self.A11 = np.array([ptA11x, ptA11y])
+
+			ptA12x = ptA11x - self.data_object.weld_inline / 4
+			ptA12y = ptA11y
+			self.A12 = np.array([ptA12x, ptA12y])
+
+			ptA13x = ptA12x - self.data_object.weld_inline / 4
+			ptA13y = ptA12y
+			self.A13 = np.array([ptA13x, ptA13y])
+
+			ptA14x = ptA13x
+			ptA14y = ptA13y - self.data_object.weld_oppline / 2
+			self.A14 = np.array([ptA14x, ptA14y])
+
+
 	def call_Top_View(self, filename):
 		"""
 
@@ -1212,6 +1479,12 @@ class Top_View(object):
 			dwg.add(dwg.line(self.A8, self.A9).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A10, self.A9).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A10, self.A1).stroke('blue', width=2.5, linecap='square'))
+			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
+											   patternTransform="rotate(45 2 2)"))
+			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
+			dwg.add(dwg.rect(insert=(self.A1), size=(self.data_object.weld_inline / 2, self.data_object.t ),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+
 
 		elif self.data_object.conn_loc == "Back to Back Angles":
 			wd = int((self.data_object.member_length) + 1000)
@@ -1233,6 +1506,13 @@ class Top_View(object):
 			dwg.add(dwg.line(self.A12, self.A13).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A12, self.A8).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=2.5, linecap='square'))
+			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
+											   patternTransform="rotate(45 2 2)"))
+			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
+			dwg.add(dwg.rect(insert=(self.A1), size=(self.data_object.weld_inline / 2, self.data_object.t),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+			dwg.add(dwg.rect(insert=(self.A11 -(self.data_object.t* np.array([0, 1]))), size=(self.data_object.weld_inline / 2, self.data_object.t),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
 
 		elif self.data_object.conn_loc == "Star Angles":
 			wd = int((self.data_object.member_length) + 1000)
@@ -1253,240 +1533,116 @@ class Top_View(object):
 			dwg.add(dwg.line(self.A14, self.A13).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A12, self.A13).stroke('blue', width=2.5, linecap='square'))
 			dwg.add(dwg.line(self.A12, self.A8).stroke('blue', width=2.5, linecap='square'))
-			dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=2.5, linecap='square'))
-# 		wd = (int(2 * self.data_object.beam_length_L1 + 2 * self.data_object.plate_thickness_p1 + 200 + 500))
-# 		ht = (int(self.data_object.plate_width_B1 + 300 + 300))
-# 		dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=('-200 -300 {} {}').format(wd,ht))
-# 		dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A1], stroke='blue', fill='none', stroke_width=2.5))
-#
-# 		dwg.add(dwg.polyline(points=[self.P1, self.P2, self.P3, self.P4, self.P1], stroke='blue', fill='none', stroke_width='2.5'))
-# 		dwg.add(dwg.polyline(points=[self.PP1, self.PP2, self.PP3, self.PP4, self.PP1], stroke='blue', fill='none', stroke_width=2.5))
-#
-# 		dwg.add(dwg.polyline(points=[self.AA1, self.AA2, self.AA3, self.AA4, self.AA1], stroke='blue', fill='none', stroke_width=2.5))
-#
-# 		dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='red', fill='red', stroke_width=2.5))
-# 		dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='red', fill='red', stroke_width=2.5))
-# 		dwg.add(dwg.polyline(points=[self.BB1, self.BB2, self.BB3, self.BB1], stroke='red', fill='red', stroke_width=2.5))
-# 		dwg.add(dwg.polyline(points=[self.BB4, self.BB5, self.BB6, self.BB4], stroke='red', fill='red', stroke_width=2.5))
-#
-# 		if self.data_object.input_dict == "Flush":
-# 			dwg.add(dwg.line(self.S1, self.S2).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.S2, self.AS2).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.AS2, self.S3).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			# dwg.add(dwg.line(self.S3, self.SA3).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			# dwg.add(dwg.line(self.S4, self.SA4).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.S6, self.S5).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.S5, self.AS5).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.AS5, self.S4).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-#
-# 			dwg.add(dwg.line(self.SS1, self.SS2).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.SS2, self.ASS2).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(
-# 				dwg.line(self.ASS2, self.SS3).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			# dwg.add(dwg.line(self.SSA3, self.SS3).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			# dwg.add(dwg.line(self.SS4, self.SSA4).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.SS6, self.SS5).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.SS5, self.ASS5).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(
-# 				dwg.line(self.ASS5, self.SS4).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-#
-# 			dwg.add(dwg.line(self.AA5, self.AA8).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.AA6, self.AA7).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.A5, self.A8).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.A6, self.A7).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 		else:
-# 			dwg.add(dwg.line(self.A5, self.AS8).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.AS8, self.A8).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.A6, self.AS7).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.AS7, self.A7).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.AS7, self.AS8).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(dwg.line(self.AA5, self.AAS5).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(
-# 				dwg.line(self.AAS5, self.AA8).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.AA6, self.AAS6).stroke('blue', width=2.5, linecap='square'))
-# 			dwg.add(
-# 				dwg.line(self.AAS6, self.AA7).stroke('red', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
-# 			dwg.add(dwg.line(self.AAS6, self.AAS5).stroke('blue', width=2.5, linecap='square'))
-# 			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse", patternTransform="rotate(45 2 2)"))
-# 			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
-#
-# 			dwg.add(dwg.rect(insert=self.AS8, size=(self.data_object.stiffener_length, self.data_object.stiffener_weldsize),
-# 							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-# 			dwg.add(dwg.rect(insert=self.AS7 - self.data_object.stiffener_weldsize * np.array([0, 1]),
-# 							 size=(self.data_object.stiffener_length, self.data_object.stiffener_weldsize),
-# 							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-# 			dwg.add(dwg.rect(insert=self.AA5, size=(self.data_object.stiffener_length, self.data_object.stiffener_weldsize),
-# 							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-# 			dwg.add(dwg.rect(insert=self.AA6 - self.data_object.stiffener_weldsize * np.array([0, 1]),
-# 							 size=(self.data_object.stiffener_length, self.data_object.stiffener_weldsize),
-# 							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-#
-# 		if self.data_object.weld == "Fillet Weld":
-# 			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
-# 											   patternTransform="rotate(45 2 2)"))
-# 			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
-# 			dwg.add(
-# 				dwg.rect(insert=self.P, size=(self.data_object.flange_weld_thickness, self.data_object.beam_width_B1),
-# 						 fill="url(#diagonalHatch)",
-# 						 stroke='white', stroke_width=1.0))
-# 			dwg.add(
-# 				dwg.rect(insert=self.AA1, size=(self.data_object.flange_weld_thickness, self.data_object.beam_width_B2),
-# 						 fill="url(#diagonalHatch)",
-# 						 stroke='white', stroke_width=1.0))
-# 		else:
-# 			pass
-#
-# 		nofc = self.data_object.no_of_columns
-# 		bolt_r = int(self.data_object.bolt_diameter) / 2
-#
-# 		# ------------------------------------------  Bolts Outside Top Flange -------------------------------------------
-# 		pt_outside_top_column_list = []
-# 		if nofc >= 1:
-# 			for i in range(nofc):
-# 				ptx = self.PP2 - self.data_object.edge_dist * np.array([0, -1]) - \
-# 					  (self.data_object.plate_thickness_p1 + self.data_object.plate_thickness_p1) * np.array([1, 0]) + \
-# 					  i * self.data_object.cross_centre_gauge_dist * np.array([0, 1])
-# 				ptx1 = ptx - bolt_r * np.array([0, 1])
-# 				rect_width = float(self.data_object.bolt_diameter)
-# 				rect_length = float(self.data_object.plate_thickness_p1 + self.data_object.plate_thickness_p2)
-# 				dwg.add(dwg.rect(insert=ptx1, size=(rect_length, rect_width), fill='black', stroke='black', stroke_width=2.5))
-#
-# 				pt_Cx = ptx + 10 * np.array([1, 0])
-# 				pt_Dx = ptx + (rect_length + 20) * np.array([1, 0])
-# 				dwg.add(dwg.line(pt_Cx, pt_Dx).stroke('black', width=2.0, linecap='square'))
-# 				pt_outside_top_column_list.append(ptx)
-#
-# 				pt_Cx1 = ptx + 1 * np.array([-1, 0])
-# 				pt_Dx1 = ptx + (rect_length - 14) * np.array([-1, 0])
-# 				dwg.add(dwg.line(pt_Cx1, pt_Dx1).stroke('black', width=2.0, linecap='square'))
-# 				pt_outside_top_column_list.append(ptx)
-#
-# 		# ------------------------------------------  Faint line for bolts-------------------------------------------
-# 		ptx1 = np.array(pt_outside_top_column_list[0])
-# 		pty1 = ptx1 + (self.data_object.beam_length_L1 + 75) * np.array([1, 0])
-# 		self.data_object.draw_faint_line(ptx1, pty1, dwg)
-#
-# 		ptx2 = np.array(pt_outside_top_column_list[1]) + self.data_object.cross_centre_gauge_dist * np.array([0, 1])
-# 		pty2 = ptx2 + (self.data_object.beam_length_L1 + 75) * np.array([1, 0])
-# 		self.data_object.draw_faint_line(ptx2, pty2, dwg)
-#
-# 		point1 = ptx2 + (self.data_object.cross_centre_gauge_dist) * np.array([0, -1])
-# 		params = {"offset": (self.data_object.beam_length_L1 + 75), "textoffset": 10, "lineori": "right",
-# 				  "endlinedim": 10, "arrowlen": 20}
-# 		self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.cross_centre_gauge_dist), params)
-#
-# 		# ------------------------------------------  Primary Beam 1& 2 -------------------------------------------
-# 		point = self.A2 - self.data_object.beam_length_L1 / 2 * np.array([1, 0])
-# 		theta = 60
-# 		offset = 50
-# 		textdown = " "
-# 		textup = "Beam " + str(self.data_object.beam_designation)
-# 		element = " "
-# 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NW", offset, textup, textdown, element)
-#
-# 		point = self.AA2 - self.data_object.beam_length_L2 / 2 * np.array([1, 0])
-# 		theta = 60
-# 		offset = 50
-# 		textup = "Beam " + str(self.data_object.beam_designation)
-# 		textdown = " "
-# 		element = " "
-# 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NE", offset, textup, textdown, element)
-#
-# 		# ------------------------------------------  End Plate 1 & 2 -------------------------------------------
-# 		point = self.P1 + self.data_object.plate_thickness_p1 / 2 * np.array([1, 0])
-# 		theta = 60
-# 		offset = 150
-# 		textdown = " "
-# 		textup = "End Plate " + str(self.data_object.plate_length_L1) + "x" + str(self.data_object.plate_width_B1) + "x" + str(
-# 			self.data_object.plate_thickness_p1)
-# 		element = " "
-# 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NW", offset, textup, textdown, element)
-#
-# 		point = self.PP1 + self.data_object.plate_thickness_p1 / 2 * np.array([1, 0])
-# 		theta = 60
-# 		offset = 150
-# 		textup = "End Plate " + str(self.data_object.plate_length_L2) + "x" + str(self.data_object.plate_width_B2) + "x" + str(
-# 			self.data_object.plate_thickness_p2)
-# 		textdown = " "
-# 		element = " "
-# 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NE", offset, textup, textdown, element)
-#
-# 		# ------------------------------------------  Weld label --------------------------------------------------
-# 		self.data_object.stiffener_weld = 1
-# 		point = self.AAS6
-# 		theta = 60
-# 		offset = 50
-# 		textup = "          z " + str(self.data_object.stiffener_weldsize)
-# 		textdown = "          z " + str(self.data_object.stiffener_weldsize)
-# 		element = "weld"
-# 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NE", offset, textup, textdown, element)
-# 		self.data_object.stiffener_weld = 0
-#
-# 		if self.data_object.weld == "Fillet Weld":
-# 			point = self.AA1
-# 			theta = 60
-# 			offset = 100
-# 			textup = "          z " + str(self.data_object.flange_weld_thickness)
-# 			textdown = "          z " + str(self.data_object.flange_weld_thickness)
-# 			element = "weld"
-# 			self.data_object.draw_oriented_arrow(dwg, point, theta, "NE", offset, textup, textdown, element)
-# 		else:
-# 			point = self.AA1
-# 			theta = 60
-# 			offset = 100
-# 			textup = "               "
-# 			textdown = "               "
-# 			element = "weld"
-# 			self.data_object.draw_oriented_arrow(dwg, point, theta, "NE", offset, textup, textdown, element)
-#
-# 		if self.data_object.input_dict != "Flush":
-# 			# ------------------------------------------ Stiffener -------------------------------------------------
-# 			point = self.AAS5
-# 			theta = 60
-# 			offset = 50
-# 			textup = "Stiffener " + str(self.data_object.stiffener_height) + "x" + str(
-# 				self.data_object.stiffener_length) + "x" + str(
-# 				self.data_object.stiffener_thickness)
-# 			textdown = " "
-# 			element = " "
-# 			self.data_object.draw_oriented_arrow(dwg, point, theta, "SE", offset, textup, textdown, element)
-# 		else:
-# 			pass
-#
-# 	# ------------------------------------------  Sectional arrow -------------------------------------------
-# 		pt_a1 = self.A4 - (200) * np.array([0, -1])
-# 		pt_b1 = pt_a1 + (50 * np.array([0, -1]))
-# 		txt_1 = pt_b1 + (20 * np.array([-1, 0])) + (50 * np.array([0, -1]))
-# 		text = "C"
-# 		self.data_object.draw_cross_section(dwg, pt_a1, pt_b1, txt_1, text)
-#
-# 		pt_a2 = pt_a1 + (2 * self.data_object.beam_length_L1 + 2 * self.data_object.plate_thickness_p1) * np.array(
-# 			[1, 0])
-# 		pt_b2 = pt_a2 + (50 * np.array([0, -1]))
-# 		txt_2 = pt_b2 + (20 * np.array([-1, 0])) + (50 * np.array([0, -1]))
-# 		self.data_object.draw_cross_section(dwg, pt_a2, pt_b2, txt_2, text)
-#
-# 		dwg.add(dwg.line(pt_a1, pt_a2).stroke('black', width=1.5, linecap='square'))
-#
-# 		pt_a3 = self.AA2 + (300) * np.array([1, 0])
-# 		pt_b3 = pt_a3 + (50 * np.array([-1, 0]))
-# 		txt_3 = pt_b3 + (20 * np.array([0, 1])) + (75 * np.array([-1, 0]))
-# 		text = "B"
-# 		self.data_object.draw_cross_section(dwg, pt_a3, pt_b3, txt_3, text)
-#
-# 		pt_a4 = pt_a3 + (self.data_object.beam_width_B1 * np.array([0, 1]))
-# 		pt_b4 = pt_a4 + (50 * np.array([-1, 0]))
-# 		txt_4 = pt_b4 + 20 * np.array([0, 1]) + (75 * np.array([-1, 0]))
-# 		self.data_object.draw_cross_section(dwg, pt_a4, pt_b4, txt_4, text)
-#
-# 		dwg.add(dwg.line(pt_a3, pt_a4).stroke('black', width=1.5, linecap='square'))
-#
-# 		# ------------------------------------------  View details -------------------------------------------
-# 		ptx = self.P4 - 50 * np.array([1, 0]) + 250 * np.array([0, 1])
-# 		dwg.add(dwg.text('Top view (Sec A-A) ', insert=ptx, fill='black', font_family="sans-serif", font_size=30))
-# 		ptx1 = ptx + 40 * np.array([0, 1])
-# 		dwg.add(
-# 			dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif", font_size=30))
+			dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
+											   patternTransform="rotate(45 2 2)"))
+			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
+			dwg.add(dwg.rect(insert=(self.A1), size=(self.data_object.weld_inline / 2, self.data_object.t),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+			dwg.add(dwg.rect(insert=(self.A11 - (self.data_object.t * np.array([0, 1]))),
+							 size=(self.data_object.weld_inline / 2, self.data_object.t),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+
+		elif self.data_object.conn_loc == "Web":
+			wd = int((self.data_object.member_length) + 1000)
+			ht = int(self.data_object.member_d + 800)
+			dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
+				'-600 -400 {} {}').format(wd, ht))
+			dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A1], stroke='blue', fill='none',
+								 stroke_width=2.5))
+
+			dwg.add(dwg.line(self.A5, self.A6).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			if self.data_object.section_type == "Columns" or self.data_object.section_type == "Beams":
+				dwg.add(dwg.line(self.A7, self.A8).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+				dwg.add(dwg.line(self.A13, self.A8).stroke('blue', width=2.5, linecap='square'))
+			else:
+				dwg.add(dwg.line(self.A13, self.A5).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			dwg.add(dwg.line(self.A10, self.A11).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			dwg.add(dwg.line(self.A11, self.A12).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A12, self.A13).stroke('blue', width=2.5, linecap='square'))
+
+
+		elif self.data_object.conn_loc == "Flange":
+			wd = int((self.data_object.member_length) + 1000)
+			ht = int(self.data_object.member_d + 800)
+			dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
+				'-600 -400 {} {}').format(wd, ht))
+			# dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A1], stroke='blue', fill='none',
+			# 					 stroke_width=2.5))
+			dwg.add(dwg.line(self.A1, self.A2).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A2, self.A3).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A3, self.A4).stroke('blue', width=2.5, linecap='square'))
+			# dwg.add(dwg.line(self.A1, self.A7).stroke('blue', width=2.5, linecap='square'))
+			# dwg.add(dwg.line(self.A4, self.A10).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A5, self.A6).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			if self.data_object.section_type != "Channels":
+				dwg.add(dwg.line(self.A7, self.A8).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			else:
+				pass
+			dwg.add(dwg.line(self.A9, self.A1).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A4, self.A12).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A9, self.A12).stroke('blue', width=2.5, linecap='square').dasharray(dasharray=[5, 5]))
+			dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A10, self.A11).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A11, self.A12).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A12, self.A13).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A13, self.A14).stroke('blue', width=2.5, linecap='square'))
+			dwg.add(dwg.line(self.A14, self.A9).stroke('blue', width=2.5, linecap='square'))
+			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
+											   patternTransform="rotate(45 2 2)"))
+			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
+			dwg.add(dwg.rect(insert=(self.A9 - (12 * np.array([0, 1]))), size=(self.data_object.weld_inline / 4, 8),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+			dwg.add(dwg.rect(insert=(self.A12),
+							 size=(self.data_object.weld_inline / 4, 8),
+							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+			dwg.add(dwg.rect(insert=(self.A10), size=(8, self.data_object.weld_oppline/2),
+							 fill="url(#diagonalHatch)",
+							 stroke='white', stroke_width=1.0))
+
+		# ------------------------------------------  Primary Beam 1& 2 -------------------------------------------
+		point = self.A1
+		theta = 60
+		offset = 50
+		textdown = " "
+		textup =  str(self.data_object.beam_designation)
+		element = " "
+		self.data_object.draw_oriented_arrow(dwg, point, theta, "NW", offset, textup, textdown, element)
+
+	# ------------------------------------------  Sectional arrow -------------------------------------------
+	# 	pt_a1 = self.A4 - (200) * np.array([0, -1])
+	# 	pt_b1 = pt_a1 + (50 * np.array([0, -1]))
+	# 	txt_1 = pt_b1 + (20 * np.array([-1, 0])) + (50 * np.array([0, -1]))
+	# 	text = "C"
+	# 	self.data_object.draw_cross_section(dwg, pt_a1, pt_b1, txt_1, text)
+    #
+	# 	pt_a2 = pt_a1 + (2 * self.data_object.beam_length_L1 + 2 * self.data_object.plate_thickness_p1) * np.array(
+	# 		[1, 0])
+	# 	pt_b2 = pt_a2 + (50 * np.array([0, -1]))
+	# 	txt_2 = pt_b2 + (20 * np.array([-1, 0])) + (50 * np.array([0, -1]))
+	# 	self.data_object.draw_cross_section(dwg, pt_a2, pt_b2, txt_2, text)
+    #
+	# 	dwg.add(dwg.line(pt_a1, pt_a2).stroke('black', width=1.5, linecap='square'))
+    #
+	# 	pt_a3 = self.AA2 + (300) * np.array([1, 0])
+	# 	pt_b3 = pt_a3 + (50 * np.array([-1, 0]))
+	# 	txt_3 = pt_b3 + (20 * np.array([0, 1])) + (75 * np.array([-1, 0]))
+	# 	text = "B"
+	# 	self.data_object.draw_cross_section(dwg, pt_a3, pt_b3, txt_3, text)
+    #
+	# 	pt_a4 = pt_a3 + (self.data_object.beam_width_B1 * np.array([0, 1]))
+	# 	pt_b4 = pt_a4 + (50 * np.array([-1, 0]))
+	# 	txt_4 = pt_b4 + 20 * np.array([0, 1]) + (75 * np.array([-1, 0]))
+	# 	self.data_object.draw_cross_section(dwg, pt_a4, pt_b4, txt_4, text)
+    #
+	# 	dwg.add(dwg.line(pt_a3, pt_a4).stroke('black', width=1.5, linecap='square'))
+
+		# ------------------------------------------  View details -------------------------------------------
+		ptx = self.A4 + (self.data_object.member_length/4)* np.array([1, 0]) + 250 * np.array([0, 1])
+		dwg.add(dwg.text('Top view (Sec A-A) ', insert=ptx, fill='black', font_family="sans-serif", font_size=30))
+		ptx1 = ptx + 40 * np.array([0, 1])
+		dwg.add(dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif", font_size=30))
 #
 		dwg.save()
 #
