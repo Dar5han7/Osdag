@@ -795,6 +795,35 @@ class Maincontroller(QMainWindow):
 		self.ui.txt_Fy.editingFinished.connect(
 			lambda: self.validate_fu_fy(self.ui.txt_Fu, self.ui.txt_Fy, self.ui.txt_Fy, self.ui.lbl_fy))
 
+		# TODO #
+		# dictmemberdata = self.fetchMembPara()
+		# if self.ui.combo_sectiontype != "Angles":
+		# 	member_d = float(dictmemberdata["D"])
+		# 	member_B = float(dictmemberdata["B"])
+		# else:
+		# 	member_leg = dictmemberdata["AXB"]
+		# 	leg = member_leg.split("x")
+		# 	leg1 = leg[0]
+		# 	leg2 = leg[1]
+		# 	min_leg = min(leg1,leg2)
+		# 	max_leg = max (leg1,leg2)
+		#
+		# if self.ui.combo_conn_loc == "Flange":
+		# 	min_weld_length = member_B
+		# 	max_weld_length = (2 * member_B - 20)
+		# elif self.ui.combo_conn_loc == "Web" or "Back to Back Web":
+		# 	min_weld_length = 0.6* member_d
+		# 	max_weld_length = member_d -20
+		# elif self.ui.combo_conn_loc == "Back to Back Angles":
+		# 	min_weld_length = min_leg
+		# 	max_weld_length = max_leg
+		# elif self.ui.combo_conn_loc == "Star Angles":
+		# 	min_weld_length = (min_leg + min_leg)
+		# 	max_weld_length = (max_leg + max_leg)
+		# self.ui.txt_oppline_tension.editingFinished.connect(lambda: self.check_weld_range(self.ui.txt_oppline_tension,min_weld_length,max_weld_length))
+		# TODO #
+
+
 
 		from osdagMainSettings import backend_name
 		self.display, _ = self.init_display(backend_str=backend_name())
@@ -1722,6 +1751,7 @@ class Maincontroller(QMainWindow):
 			widget.clear()
 			widget.setFocus()
 
+	# TODO #
 	# def check_weld_range(self, widget, min_weld_length, max_weld_length):
 	# 	"""
 	# 	Args:
@@ -1736,6 +1766,8 @@ class Maincontroller(QMainWindow):
 	# 		QMessageBox.about(self, "Error", "Please enter a value between %s-%s" % (min_weld_length, max_weld_length))
 	# 		widget.clear()
 	# 		widget.setFocus()
+
+	# TODO #
 
 	def validate_fu_fy(self, fu_widget, fy_widget, current_widget, lblwidget):
 		'''(QlineEdit,QLable,Number,Number)---> NoneType

@@ -1330,7 +1330,7 @@ class Maincontroller(QMainWindow):
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
 
-		elif self.ui.combo_conn_loc.currentText() == "Web" and self.ui.combo_sectiontype.currentText() == "Angles" :
+		elif self.ui.combo_conn_loc.currentText() == "Web" and self.ui.combo_sectiontype.currentText() == "Angles":
 			flag = False
 			QMessageBox.information(self, "Information", "Wrong Combination of Connection Type and Section Type")
 
