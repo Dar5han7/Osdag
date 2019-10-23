@@ -306,7 +306,8 @@ def tension_welded_design(uiObj):
     # bolt_column_pitch = float(uiObj["Bolt"]["Columnpitch"])
     # bolt_enddistance = float(uiObj["Bolt"]["Enddistance"])
     # bolt_edgedistance = float(uiObj["Bolt"]["Edgedistance"])
-    Plate_thickness =  float(uiObj["Weld"]["Platethickness"])
+    if conn == "Back to Back Web" or conn == "Star Angles" or conn == "Back to Back Angles":
+        Plate_thickness = float(uiObj["Weld"]["Platethickness"])
     Inline_Weld = float(uiObj["Weld"]["inline_tension"])
     Oppline_Weld = float(uiObj["Weld"]["oppline_tension"])
 
