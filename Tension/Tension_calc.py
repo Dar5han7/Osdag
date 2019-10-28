@@ -491,6 +491,13 @@ def tension_welded_design(uiObj):
     else:
         tension_blockshear = 0
 
+    if Member_type !="Channels" and  conn == "Web":
+        tension_blockshear = IS800_2007.cl_6_4_1_block_shear_strength(A_vg, A_vn, A_tg, A_tn, Member_fu, Member_fy)/1000
+    else:
+        tension_blockshear = 0
+
+
+
     if Member_type == "Angles":
         tension_rupture =IS800_2007.tension_angle_member_design_due_to_rupture_of_critical_section(Member_An,Member_Ag, Member_fu , Member_fy, L_c, w, shear_lag, t)/1000
     else:

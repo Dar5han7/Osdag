@@ -171,7 +171,7 @@ class Tension_drawing(object):
 		self.draw_end_arrow(line, smarker)
 
 		Q12_mid = 0.5 * (Q1 + Q2)
-		text_pt = Q12_mid + params["textoffset"] * normal_unit_vector - (len(text)*15)/2
+		text_pt = Q12_mid + params["textoffset"] * normal_unit_vector - (len(text)*16)/2
 		dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=28))
 
 		L1 = Q1 + params["endlinedim"] * normal_unit_vector
@@ -215,7 +215,12 @@ class Tension_drawing(object):
 
 		Q12_mid = 0.5 * (Q1 + Q2)
 		text_pt = Q12_mid + params["textoffset"] * normal_unit_vector
-		dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=15))
+
+		if self.section_type == "Angles":
+			dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=15))
+		else:
+			dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=28))
+
 
 		L1 = Q1 + params["endlinedim"] * normal_unit_vector
 		L2 = Q1 + params["endlinedim"] * (-normal_unit_vector)
@@ -257,7 +262,7 @@ class Tension_drawing(object):
 		line = dwg.add(dwg.line(pt_a, pt_b).stroke("black", width=2.5, linecap="square"))
 		sec_arrow = self.add_section_marker(dwg)
 		self.draw_end_arrow(line, sec_arrow)
-		dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=52))
+		dwg.add(dwg.text(text, insert=text_pt, fill="black", font_family="sans-serif", font_size=40))
 
 	def draw_dimension_inner_arrow(self, dwg, pt_a, pt_b, text, params):
 		# TODO
@@ -683,22 +688,31 @@ class Front_View(object):
 			self.A9 = np.array([ptA9x, ptA9y])
 
 			ptA10x = ptA9x
-			ptA10y = ptA9y - 2 * 2 * self.data_object.weld_oppline
+			ptA10y = ptA7y
 			self.A10 = np.array([ptA10x, ptA10y])
 
 			if self.data_object.conn_loc == "Back to Back Angles":
 
-				ptA7x = ptA1x + self.data_object.weld_inline / 4
-				ptA7y = ptA1y + self.data_object.leg_min / 2 - 2 * self.data_object.weld_oppline
-				self.A7 = np.array([ptA7x, ptA7y])
+				if self.data_object.weld_oppline > 2* self.data_object.leg_min:
+					ptA7x = ptA1x + self.data_object.weld_inline / 4
+					ptA7y = ptA1y + self.data_object.leg_max / 2 - self.data_object.weld_oppline
+					self.A7 = np.array([ptA7x, ptA7y])
+
+					ptA8x = ptA4x + self.data_object.weld_inline / 4
+					ptA8y = ptA4y - self.data_object.leg_max / 2 +  self.data_object.weld_oppline
+					self.A8 = np.array([ptA8x, ptA8y])
+				else:
+					ptA7x = ptA1x + self.data_object.weld_inline / 4
+					ptA7y = ptA1y + self.data_object.leg_min/ 2 - self.data_object.weld_oppline
+					self.A7 = np.array([ptA7x, ptA7y])
+
+					ptA8x = ptA4x + self.data_object.weld_inline / 4
+					ptA8y = ptA4y - self.data_object.leg_min / 2 + self.data_object.weld_oppline
+					self.A8 = np.array([ptA8x, ptA8y])
 
 				ptA7ax = ptA1x + self.data_object.weld_inline / 4
 				ptA7ay = ptA1y
 				self.A7a = np.array([ptA7ax, ptA7ay])
-
-				ptA8x = ptA4x + self.data_object.weld_inline / 4
-				ptA8y = ptA4y - self.data_object.leg_min / 2 + 2 * self.data_object.weld_oppline
-				self.A8 = np.array([ptA8x, ptA8y])
 
 				ptA8ax = ptA4x + self.data_object.weld_inline / 4
 				ptA8ay = ptA4y
@@ -709,7 +723,7 @@ class Front_View(object):
 				self.A9 = np.array([ptA9x, ptA9y])
 
 				ptA10x = ptA9x
-				ptA10y = ptA9y - 2 * 2 * self.data_object.weld_oppline
+				ptA10y = ptA7y
 				self.A10 = np.array([ptA10x, ptA10y])
 			else:
 				pass
@@ -824,27 +838,27 @@ class Front_View(object):
 			ptA8y = ptA4y - self.data_object.member_tf
 			self.A8 = np.array([ptA8x, ptA8y])
 
-			ptA9x = ptA1x + self.data_object.weld_inline / 2
+			ptA9x = ptA1x + self.data_object.weld_inline / 4
 			ptA9y = ptA1y - self.data_object.member_d/2
 			self.A9 = np.array([ptA9x, ptA9y])
 
-			ptA9ax = ptA1x + self.data_object.weld_inline / 2
+			ptA9ax = ptA1x + self.data_object.weld_inline / 4
 			ptA9ay = ptA1y
 			self.A9a = np.array([ptA9ax, ptA9ay])
 
 			ptA10x = ptA9x
-			ptA10y = ptA9y +  self.data_object.weld_oppline
+			ptA10y = ptA9y +  self.data_object.weld_oppline/2 +2* self.data_object.member_d/2
 			self.A10 = np.array([ptA10x, ptA10y])
 
-			ptA10ax = ptA4x + self.data_object.weld_inline / 2
+			ptA10ax = ptA4x + self.data_object.weld_inline / 4
 			ptA10ay = ptA4y
 			self.A10a = np.array([ptA10ax, ptA10ay])
 
-			ptA11x = ptA10x - self.data_object.weld_inline
+			ptA11x = ptA10x - self.data_object.weld_inline/2
 			ptA11y = ptA10y
 			self.A11 = np.array([ptA11x, ptA11y])
 
-			ptA12x = ptA9x - self.data_object.weld_inline
+			ptA12x = ptA9x - self.data_object.weld_inline/2
 			ptA12y = ptA9y
 			self.A12 = np.array([ptA12x, ptA12y])
 
@@ -887,23 +901,23 @@ class Front_View(object):
 			ptA9y = ptA1y + self.data_object.member_d/2- self.data_object.weld_oppline
 			self.A9 = np.array([ptA9x, ptA9y])
 
-			ptA9ax = ptA1x + self.data_object.weld_inline / 4
+			ptA9ax = ptA1x + self.data_object.weld_inline / 2
 			ptA9ay = ptA1y
 			self.A9a = np.array([ptA9ax, ptA9ay])
 
 			ptA10x = ptA9x
-			ptA10y = ptA9y + 2 * self.data_object.weld_oppline
+			ptA10y = ptA9y + 2* self.data_object.weld_oppline
 			self.A10 = np.array([ptA10x, ptA10y])
 
-			ptA10ax = ptA4x + self.data_object.weld_inline / 4
+			ptA10ax = ptA4x + self.data_object.weld_inline / 2
 			ptA10ay = ptA4y
 			self.A10a = np.array([ptA10ax, ptA10ay])
 
-			ptA11x = ptA10x - self.data_object.weld_inline/2
+			ptA11x = ptA10x - self.data_object.weld_inline
 			ptA11y = ptA10y
 			self.A11 = np.array([ptA11x, ptA11y])
 
-			ptA12x = ptA9x - self.data_object.weld_inline/2
+			ptA12x = ptA9x - self.data_object.weld_inline
 			ptA12y = ptA9y
 			self.A12 = np.array([ptA12x, ptA12y])
 
@@ -1076,8 +1090,14 @@ class Front_View(object):
 			pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
 											   patternTransform="rotate(45 2 2)"))
 			pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
-			dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0,1])), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-			dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)",
+			if self.data_object.conn_loc == "Back to Back Angles":
+				dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0,1])), size=(self.data_object.weld_inline/4, 8), fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+				dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline/4, 8), fill="url(#diagonalHatch)",
+								 stroke='white', stroke_width=1.0))
+			else:
+				dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline/2, 8),
+								 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+				dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline/2, 8), fill="url(#diagonalHatch)",
 							 stroke='white', stroke_width=1.0))
 			dwg.add(dwg.rect(insert=(self.A1- 8 * np.array([1,0])), size=(8, self.data_object.weld_oppline), fill="url(#diagonalHatch)",
 							 stroke='white', stroke_width=1.0))
@@ -1135,16 +1155,26 @@ class Front_View(object):
 				pattern = dwg.defs.add(dwg.pattern(id="diagonalHatch", size=(8, 8), patternUnits="userSpaceOnUse",
 												   patternTransform="rotate(45 2 2)"))
 				pattern.add(dwg.path(d="M 0,1 l 8,0", stroke='#000000', stroke_width=2.5))
-				dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 2, 8),
-								 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
-				dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)",
-							 stroke='white', stroke_width=1.0))
+				# dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 2, 8),
+				# 				 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+				# dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8), fill="url(#diagonalHatch)",
+				# 			 stroke='white', stroke_width=1.0))
 				if self.data_object.conn_loc == "Back to Back Web":
 					dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([1, 0])), size=(8, self.data_object.weld_oppline/2),
 									 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+					dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 4, 8),
+								 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+					dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 4, 8),fill="url(#diagonalHatch)",
+									 stroke='white', stroke_width=1.0))
 				else:
 					dwg.add(dwg.rect(insert=(self.A1 - 8 * np.array([1, 0])), size=(8, self.data_object.weld_oppline),
 									 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+					dwg.add(
+						dwg.rect(insert=(self.A1 - 8 * np.array([0, 1])), size=(self.data_object.weld_inline / 2, 8),
+								 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
+					dwg.add(dwg.rect(insert=(self.A4), size=(self.data_object.weld_inline / 2, 8),
+									 fill="url(#diagonalHatch)",
+									 stroke='white', stroke_width=1.0))
 			else:
 				dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=2.5, linecap='square'))
 				dwg.add(dwg.line(self.A12, self.A12a).stroke('blue', width=2.5, linecap='square'))
@@ -1203,18 +1233,50 @@ class Front_View(object):
 		element = " "
 		self.data_object.draw_oriented_arrow(dwg, point, theta, "NW", offset, textup, textdown, element)
 
+		# ------------------------------------------  Beam Designation Labeling  -------------------------------------------
+		pt_a1 = self.A1 + (300) * np.array([0, -1])- (200) * np.array([1, 0])
+		pt_b1 = pt_a1 + (50 * np.array([0, 1]))
+		txt_1 = pt_b1 + (20 * np.array([-1, 0])) + (75 * np.array([0, 1]))
+		text = "A"
+		self.data_object.draw_cross_section(dwg, pt_a1, pt_b1, txt_1, text)
+
+		pt_a2 = self.A2 + (300) * np.array([0, -1]) + (200) * np.array([1, 0])
+		pt_b2 = pt_a2 + (50 * np.array([0, 1]))
+		txt_2 = pt_b2 + (20 * np.array([-1, 0])) + (75 * np.array([0, 1]))
+		self.data_object.draw_cross_section(dwg, pt_a2, pt_b2, txt_2, text)
+
+		dwg.add(dwg.line(pt_a1, pt_a2).stroke('black', width=1.5, linecap='square'))
+
 		# ------------------------------------------  Dimensions Labeling  -------------------------------------------------
-		ptx1 = self.A4
-		pty1 = ptx1 + (100) * np.array([0, 1])
-		self.data_object.draw_faint_line(ptx1, pty1, dwg)
 
-		ptx2 = self.A3
-		pty2 = ptx2 + (100) * np.array([0, 1])
-		self.data_object.draw_faint_line(ptx2, pty2, dwg)
+		if self.data_object.conn_loc == "Star Angles":
+			ptx1 = self.A4
+			pty1 = ptx1 + (150) * np.array([0, 1])
+			self.data_object.draw_faint_line(ptx1, pty1, dwg)
 
-		point1 = ptx2 - (self.data_object.member_length) * np.array([1, 0])
-		params = {"offset": -100, "textoffset": 10, "lineori": "right", "endlinedim": 10, "arrowlen": 20}
-		self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.act_member_length),params)
+			ptx2 = self.A3
+			pty2 = ptx2 + (150) * np.array([0, 1])
+			self.data_object.draw_faint_line(ptx2, pty2, dwg)
+
+			point1 = ptx2 - (self.data_object.member_length) * np.array([1, 0])
+			params = {"offset": -150, "textoffset": 5, "lineori": "right", "endlinedim": 10, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.act_member_length),
+														params)
+		else:
+			ptx1 = self.A4
+			pty1 = ptx1 + (100) * np.array([0, 1])
+			self.data_object.draw_faint_line(ptx1, pty1, dwg)
+
+			ptx2 = self.A3
+			pty2 = ptx2 + (100) * np.array([0, 1])
+			self.data_object.draw_faint_line(ptx2, pty2, dwg)
+
+			point1 = ptx2 - (self.data_object.member_length) * np.array([1, 0])
+			params = {"offset": -100, "textoffset": 5, "lineori": "right", "endlinedim": 10, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.act_member_length),
+														params)
+
+
 
 		# ptx3 = self.A4
 		# pty1 = ptx1 + (100) * np.array([0, 1])
@@ -1533,26 +1595,47 @@ class Top_View(object):
 			ptA6y = ptA5y
 			self.A6 = np.array([ptA6x, ptA6y])
 
-			# if self.data_object.conn_loc == "Web":
-			ptA9x = ptA1x + self.data_object.weld_inline/4
-			ptA9y = ptA1y
-			self.A9 = np.array([ptA9x, ptA9y])
+			if self.data_object.conn_loc == "Back to Back Web":
+				ptA9x = ptA1x + self.data_object.weld_inline/4
+				ptA9y = ptA1y
+				self.A9 = np.array([ptA9x, ptA9y])
 
-			ptA10x = ptA9x
-			ptA10y = ptA9y - 12
-			self.A10 = np.array([ptA10x, ptA10y])
+				ptA10x = ptA9x
+				ptA10y = ptA9y - 12
+				self.A10 = np.array([ptA10x, ptA10y])
 
-			ptA11x = ptA10x - self.data_object.weld_inline/2
-			ptA11y = ptA10y
-			self.A11 = np.array([ptA11x, ptA11y])
+				ptA11x = ptA10x - self.data_object.weld_inline/2
+				ptA11y = ptA10y
+				self.A11 = np.array([ptA11x, ptA11y])
 
-			ptA12x = ptA11x
-			ptA12y = ptA11y + 12
-			self.A12 = np.array([ptA12x, ptA12y])
+				ptA12x = ptA11x
+				ptA12y = ptA11y + 12
+				self.A12 = np.array([ptA12x, ptA12y])
 
-			ptA13x = ptA12x
-			ptA13y = ptA12y - 12
-			self.A13 = np.array([ptA13x, ptA13y])
+				ptA13x = ptA12x
+				ptA13y = ptA12y - 12
+				self.A13 = np.array([ptA13x, ptA13y])
+			else:
+				ptA9x = ptA1x + self.data_object.weld_inline / 2
+				ptA9y = ptA1y
+				self.A9 = np.array([ptA9x, ptA9y])
+
+				ptA10x = ptA9x
+				ptA10y = ptA9y - 12
+				self.A10 = np.array([ptA10x, ptA10y])
+
+				ptA11x = ptA10x - self.data_object.weld_inline
+				ptA11y = ptA10y
+				self.A11 = np.array([ptA11x, ptA11y])
+
+				ptA12x = ptA11x
+				ptA12y = ptA11y + 12
+				self.A12 = np.array([ptA12x, ptA12y])
+
+				ptA13x = ptA12x
+				ptA13y = ptA12y - 12
+				self.A13 = np.array([ptA13x, ptA13y])
+
 
 			if self.data_object.conn_loc == "Back to Back Web":
 				ptA14x = ptA1x
@@ -1777,10 +1860,17 @@ class Top_View(object):
 							 fill="url(#diagonalHatch)", stroke='white', stroke_width=1.0))
 
 		elif self.data_object.conn_loc == "Web" or self.data_object.conn_loc == "Back to Back Web":
-			wd = int((self.data_object.member_length) + 800)
-			ht = int(self.data_object.member_d + 600)
-			dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
-				'-400 -300 {} {}').format(wd, ht))
+			if self.data_object.conn_loc == "Back to Back Web":
+				wd = int((self.data_object.member_length) + 750)
+				ht = int(self.data_object.member_d + 500)
+				dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
+					'-375 -300 {} {}').format(wd, ht))
+			else:
+				wd = int((self.data_object.member_length) + 1000)
+				ht = int(self.data_object.member_d + 800)
+				dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
+					'-600 -400 {} {}').format(wd, ht))
+
 			dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A1], stroke='blue', fill='none',
 								 stroke_width=2.5))
 
@@ -1878,13 +1968,24 @@ class Top_View(object):
 				self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.weld_inline/4),params)
 
 		elif self.data_object.section_type == "Beams" or self.data_object.section_type == "Columns"or self.data_object.section_type == "Channels" :
-			ptx1 = self.A9
-			pty1 = ptx1 + (100) * np.array([0, -1])
-			self.data_object.draw_faint_line(ptx1, pty1, dwg)
+			if self.data_object.conn_loc != "Web":
+				ptx1 = self.A9
+				pty1 = ptx1 + (100) * np.array([0, -1])
+				self.data_object.draw_faint_line(ptx1, pty1, dwg)
 
-			ptx2 = self.A10
-			pty2 = ptx2 + (100) * np.array([0, -1])
-			self.data_object.draw_faint_line(ptx2, pty2, dwg)
+				ptx2 = self.A10
+				pty2 = ptx2 + (100) * np.array([0, -1])
+				self.data_object.draw_faint_line(ptx2, pty2, dwg)
+
+			else:
+
+				ptx1 = self.A1
+				pty1 = ptx1 + (100) * np.array([0, -1])
+				self.data_object.draw_faint_line(ptx1, pty1, dwg)
+
+				ptx2 = self.A9
+				pty2 = ptx2 + (100) * np.array([0, -1])
+				self.data_object.draw_faint_line(ptx2, pty2, dwg)
 
 			if self.data_object.conn_loc == "Flange" or self.data_object.conn_loc == "Back to Back Web":
 				point1 = ptx2 - (self.data_object.weld_inline/4) * np.array([1, 0])
@@ -1896,13 +1997,57 @@ class Top_View(object):
 				self.data_object.draw_dimension_outer_arrow(dwg, point1, ptx2, str(self.data_object.weld_inline/2),
 															params)
 
+		# ------------------------------------------  Sectional arrow -------------------------------------------
+		pt_a1 = self.A4 - (200) * np.array([0, -1]) - (100 * np.array([1, 0]))
+		pt_b1 = pt_a1 + (50 * np.array([0, -1]))
+		txt_1 = pt_b1 + (50 * np.array([0, -1])) + (20 * np.array([-1, 0]))
+		text = "C"
+		self.data_object.draw_cross_section(dwg, pt_a1, pt_b1, txt_1, text)
+
+		pt_a2 = self.A3 - (200) * np.array([0, -1]) + (100 * np.array([1, 0]))
+		pt_b2 = pt_a2 + (50 * np.array([0, -1]))
+		txt_2 = pt_b2 + (50 * np.array([0, -1])) + (20 * np.array([-1, 0]))
+		self.data_object.draw_cross_section(dwg, pt_a2, pt_b2, txt_2, text)
+
+		dwg.add(dwg.line(pt_a1, pt_a2).stroke('black', width=1.5, linecap='square'))
+
+		if self.data_object.conn_loc == "Back to Back Web":
+
+			pt_a3 = self.A3 + (100) * np.array([0, 1]) + (300 * np.array([1, 0]))
+			pt_b3 = pt_a3 + (50 * np.array([-1, 0]))
+			txt_3 = pt_b3 + (75 * np.array([-1, 0])) + (20 * np.array([0, 1]))
+			text = "B"
+			self.data_object.draw_cross_section(dwg, pt_a3, pt_b3, txt_3, text)
+
+			pt_a4 = self.A16 - (100) * np.array([0, 1]) + (300 * np.array([1, 0]))
+			pt_b4 = pt_a4 + (50 * np.array([-1, 0]))
+			txt_4 = pt_b4 + (75 * np.array([-1, 0])) + (20 * np.array([0, 1]))
+			self.data_object.draw_cross_section(dwg, pt_a4, pt_b4, txt_4, text)
+
+			dwg.add(dwg.line(pt_a3, pt_a4).stroke('black', width=1.5, linecap='square'))
+		else:
+			pt_a3 = self.A2 - (100) * np.array([0, 1]) + (300 * np.array([1, 0]))
+			pt_b3 = pt_a3 + (50 * np.array([-1, 0]))
+			txt_3 = pt_b3 + (75 * np.array([-1, 0])) + (20 * np.array([0, 1]))
+			text = "B"
+			self.data_object.draw_cross_section(dwg, pt_a3, pt_b3, txt_3, text)
+
+			pt_a4 = self.A3 + (100) * np.array([0, 1]) + (300 * np.array([1, 0]))
+			pt_b4 = pt_a4 + (50 * np.array([-1, 0]))
+			txt_4 = pt_b4 + (75 * np.array([-1, 0])) + (20 * np.array([0, 1]))
+			self.data_object.draw_cross_section(dwg, pt_a4, pt_b4, txt_4, text)
+
+			dwg.add(dwg.line(pt_a3, pt_a4).stroke('black', width=1.5, linecap='square'))
+
 		# ------------------------------------------  View details -------------------------------------------
-		ptx = self.A4 + (self.data_object.member_length/4)* np.array([1, 0]) + 250 * np.array([0, 1])
+		ptx = self.A4 + (self.data_object.member_length/4)* np.array([1, 0]) + 300 * np.array([0, 1])
 		dwg.add(dwg.text('Top view (Sec A-A) ', insert=ptx, fill='black', font_family="sans-serif", font_size=28))
 		ptx1 = ptx + 40 * np.array([0, 1])
 		dwg.add(dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif", font_size=28))
 #
 		dwg.save()
+
+
 #
 #
 class Side_View (object):
@@ -2022,11 +2167,11 @@ class Side_View (object):
 				self.A6 = np.array([ptA6x, ptA6y])
 
 				ptA7x = ptA1x
-				ptA7y = ptA1y + self.data_object.leg_max/2 - 2 * self.data_object.weld_oppline
+				ptA7y = ptA1y + self.data_object.leg_max/2 - self.data_object.weld_oppline
 				self.A7 = np.array([ptA7x, ptA7y])
 
 				ptA8x = ptA2x
-				ptA8y = ptA2y - self.data_object.leg_max/2 + 2 * self.data_object.weld_oppline
+				ptA8y = ptA2y - self.data_object.leg_max/2 + self.data_object.weld_oppline
 				self.A8 = np.array([ptA8x, ptA8y])
 
 				ptA9x = ptA8x - self.data_object.t
@@ -2083,11 +2228,11 @@ class Side_View (object):
 				self.A6 = np.array([ptA6x, ptA6y])
 
 				ptA7x = ptA1x
-				ptA7y = ptA1y + self.data_object.leg_min/2 - 2 * self.data_object.weld_oppline
+				ptA7y = ptA1y + self.data_object.leg_min/2 -  self.data_object.weld_oppline
 				self.A7 = np.array([ptA7x, ptA7y])
 
 				ptA8x = ptA2x
-				ptA8y = ptA2y - self.data_object.leg_min/2 + 2 * self.data_object.weld_oppline
+				ptA8y = ptA2y - self.data_object.leg_min/2 + self.data_object.weld_oppline
 				self.A8 = np.array([ptA8x, ptA8y])
 
 				ptA9x = ptA8x - self.data_object.t
@@ -2290,13 +2435,23 @@ class Side_View (object):
 			ptA10y = ptA2y + self.data_object.member_d/2
 			self.A10 = np.array([ptA10x, ptA10y])
 
-			ptA11x = ptA10x - self.data_object.plate_thickness
-			ptA11y = ptA10y
-			self.A11 = np.array([ptA11x, ptA11y])
+			if self.data_object.section_type == "Channels":
 
-			ptA12x = ptA9x - self.data_object.plate_thickness
-			ptA12y = ptA9y
-			self.A12 = np.array([ptA12x, ptA12y])
+				ptA11x = ptA10x - self.data_object.member_tw
+				ptA11y = ptA10y
+				self.A11 = np.array([ptA11x, ptA11y])
+
+				ptA12x = ptA9x - self.data_object.member_tw
+				ptA12y = ptA9y
+				self.A12 = np.array([ptA12x, ptA12y])
+			else:
+				ptA11x = ptA10x - self.data_object.plate_thickness
+				ptA11y = ptA10y
+				self.A11 = np.array([ptA11x, ptA11y])
+
+				ptA12x = ptA9x - self.data_object.plate_thickness
+				ptA12y = ptA9y
+				self.A12 = np.array([ptA12x, ptA12y])
 
 			if  self.data_object.conn_loc == "Back to Back Web":
 				ptA13x = ptA1x - self.data_object.plate_thickness
@@ -2516,13 +2671,13 @@ class Side_View (object):
 		if self.data_object.conn_loc == "Leg":
 			# wd = int((self.data_object.member_length) + 1000)
 			if self.data_object.weld_oppline > self.data_object.leg_min:
-				ht = int(self.data_object.leg_max + 350)
+				ht = int(self.data_object.leg_max + 400)
 				wd = int(self.data_object.leg_max + 700)
 			else:
-				ht = int(self.data_object.leg_min + 350)
+				ht = int(self.data_object.leg_min + 400)
 				wd = int(self.data_object.leg_min + 700)
 			dwg = svgwrite.Drawing(filename, size=('100%', '100%'), viewBox=(
-				'-350 -175 {} {}').format(wd, ht))
+				'-350 -200 {} {}').format(wd, ht))
 			dwg.add(dwg.polyline(points=[self.A1, self.A2, self.A3, self.A4, self.A5, self.A6,self.A1],
 				stroke='blue', fill="none", stroke_width=1))
 			# dwg.add(dwg.line(self.A6, self.A7).stroke('blue', width=1, linecap='square'))
@@ -2555,7 +2710,7 @@ class Side_View (object):
 			dwg.add(dwg.line(self.A7, self.A10).stroke('blue', width=1, linecap='square'))
 
 		elif self.data_object.conn_loc == "Star Angles":
-			# wd = int((self.data_object.member_length) + 1000)
+			# wd = int((self.data_object.membe600r_length) + 1000)
 			if self.data_object.weld_oppline > self.data_object.leg_min:
 				ht = int(2*self.data_object.leg_max + 500)
 				wd = int(self.data_object.leg_max + 750)
@@ -2650,7 +2805,7 @@ class Side_View (object):
 
 
 		# ------------------------------------------Dimension Labelling -------------------------------------------
-		if self.data_object.section_type == "Angles" and  self.data_object.conn_loc != "Star Angles":
+		if self.data_object.conn_loc == "Leg":
 			ptx1 = self.A1
 			pty1 = ptx1 + (100) * np.array([-1, 0])
 			self.data_object.draw_faint_line(ptx1, pty1, dwg)
@@ -2663,6 +2818,19 @@ class Side_View (object):
 			params = {"offset": 100, "textoffset": 40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
 			self.data_object.draw_dimension_outer_arrow_side(dwg,ptx2, point1,str(self.data_object.weld_oppline),params)
 
+		elif self.data_object.conn_loc == "Back to Back Angles":
+			ptx1 = self.A1
+			pty1 = ptx1 + (100) * np.array([-1, 0])
+			self.data_object.draw_faint_line(ptx1, pty1, dwg)
+
+			ptx2 = self.A2
+			pty2 = ptx2 + (100) * np.array([-1, 0])
+			self.data_object.draw_faint_line(ptx2, pty2, dwg)
+
+			point1 = ptx2 - (self.data_object.weld_oppline/2) * np.array([0, 1])
+			params = {"offset": 100, "textoffset": 40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow_side(dwg,ptx2, point1,str(self.data_object.weld_oppline/2),params)
+
 		elif self.data_object.conn_loc == "Star Angles":
 			ptx1 = self.A1
 			pty1 = ptx1 + (100) * np.array([-1, 0])
@@ -2672,8 +2840,9 @@ class Side_View (object):
 			pty2 = ptx2 + (100) * np.array([-1, 0])
 			self.data_object.draw_faint_line(ptx2, pty2, dwg)
 
+
 			point1 = ptx2 - (self.data_object.weld_oppline) * np.array([0, 1])
-			params = {"offset": 100, "textoffset":40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
+			params = {"offset": 100, "textoffset":50, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
 			self.data_object.draw_dimension_outer_arrow_side(dwg,ptx2, point1,str(self.data_object.weld_oppline),params)
 
 		elif self.data_object.conn_loc == "Back to Back Web":
@@ -2686,8 +2855,8 @@ class Side_View (object):
 			self.data_object.draw_faint_line(ptx2, pty2, dwg)
 
 			point1 = ptx2 - (self.data_object.weld_oppline / 2) * np.array([0, 1])
-			params = {"offset": 100, "textoffset": 40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
-			self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.weld_oppline / 2),
+			params = {"offset": 100, "textoffset": 100, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow_side(dwg, ptx2, point1, str(self.data_object.weld_oppline / 2),
 														params)
 
 		elif self.data_object.conn_loc == "Web" and self.data_object.section_type == "Channels":
@@ -2700,8 +2869,8 @@ class Side_View (object):
 			self.data_object.draw_faint_line(ptx2, pty2, dwg)
 
 			point1 = ptx2 - (self.data_object.weld_oppline) * np.array([0, 1])
-			params = {"offset": 100, "textoffset": 40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
-			self.data_object.draw_dimension_outer_arrow(dwg, ptx2, point1, str(self.data_object.weld_oppline),
+			params = {"offset": 100, "textoffset": 75, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow_side(dwg, ptx2, point1, str(self.data_object.weld_oppline),
 														params)
 
 		elif self.data_object.conn_loc == "Flange":
@@ -2728,8 +2897,8 @@ class Side_View (object):
 			self.data_object.draw_faint_line(ptx2, pty2, dwg)
 
 			point1 = ptx2 - (self.data_object.weld_oppline) * np.array([0, 1])
-			params = {"offset": 100, "textoffset": 50, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
-			self.data_object.draw_dimension_outer_arrow(dwg,ptx2,point1,str(self.data_object.weld_oppline),
+			params = {"offset": 100, "textoffset": 100, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
+			self.data_object.draw_dimension_outer_arrow_side(dwg,ptx2,point1,str(self.data_object.weld_oppline),
 														params)
 		else:
 			pass
@@ -2742,7 +2911,7 @@ class Side_View (object):
 			ptx1 = ptx + 40 * np.array([0, 1])
 			dwg.add(dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif", font_size=15))
 		elif self.data_object.section_type == "Channels":
-			ptx = self.A10 + 100 * np.array([0, 1]) - (len('(All dimensions are in "mm")')) * np.array([1, 0])
+			ptx = self.A10 + 100 * np.array([0, 1]) - (4  *len('(All dimensions are in "mm")')) * np.array([1, 0])
 			dwg.add(dwg.text('Side view (Sec B-B) ', insert=ptx, fill='black', font_family="sans-serif", font_size=28))
 			ptx1 = ptx + 40 * np.array([0, 1])
 			dwg.add(dwg.text('(All dimensions are in "mm")', insert=ptx1, fill='black', font_family="sans-serif",

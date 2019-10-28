@@ -33,7 +33,7 @@ class SvgWindow(object):
         self.gridlayout.addLayout(self.horizontallayout, 1, 1, 1, 1)
         spaceritem2 = QSpacerItem(260, 20, QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.gridlayout.addItem(spaceritem2, 1, 2, 1, 1)
-        self.svgWidget.setFixedSize(1200, 700)
+        self.svgWidget.setFixedSize(1000, 700)
 
         self.btn_save_png = QPushButton('Save as PNG', self.svgWidget)
         self.btn_save_png.setToolTip('Saves 2D Image as PNG')
