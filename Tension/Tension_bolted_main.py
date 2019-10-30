@@ -705,9 +705,9 @@ class Maincontroller(QMainWindow):
 		self.retrieve_prevstate()
 		# self.ui.combo_connLoc.currentIndexChanged[str].connect(self.setimage_connection)
 
-		self.ui.btnFront.clicked.connect(lambda: self.call_2D_drawing("Front"))
-		self.ui.btnTop.clicked.connect(lambda: self.call_2D_drawing("Top"))
-		self.ui.btnSide.clicked.connect(lambda: self.call_2D_drawing("Side"))
+		# self.ui.btnFront.clicked.connect(lambda: self.call_2D_drawing("Front"))
+		# self.ui.btnTop.clicked.connect(lambda: self.call_2D_drawing("Top"))
+		# self.ui.btnSide.clicked.connect(lambda: self.call_2D_drawing("Side"))
 		self.ui.combo_diameter.currentIndexChanged[str].connect(self.bolt_hole_clearance)
 		# self.ui.combo_grade.currentIndexChanged[str].connect(self.call_bolt_fu)
 		self.ui.txt_Fu.textChanged.connect(self.call_weld_fu)
@@ -732,9 +732,9 @@ class Maincontroller(QMainWindow):
 		# self.ui.actionSave_3D_model.triggered.connect(self.save_3D_cad_images)
 		self.ui.actionCreate_design_report.triggered.connect(self.design_report)
 		# self.ui.actionChange_background.triggered.connect(self.show_color_dialog)
-		self.ui.actionSave_Front_View.triggered.connect(lambda: self.call_2D_drawing("Front"))
-		self.ui.actionSave_Side_View.triggered.connect(lambda: self.call_2D_drawing("Side"))
-		self.ui.actionSave_Top_View.triggered.connect(lambda: self.call_2D_drawing("Top"))
+		# self.ui.actionSave_Front_View.triggered.connect(lambda: self.call_2D_drawing("Front"))
+		# self.ui.actionSave_Side_View.triggered.connect(lambda: self.call_2D_drawing("Side"))
+		# self.ui.actionSave_Top_View.triggered.connect(lambda: self.call_2D_drawing("Top"))
 		self.ui.actionShow_all.triggered.connect(lambda: self.call_3DModel("gradient_bg"))
 		self.ui.actionShow_column.triggered.connect(lambda: self.call_3DColumn("gradient_bg"))
 		self.ui.actionShow_beam.triggered.connect(lambda: self.call_3DBeam("gradient_bg"))
@@ -866,7 +866,7 @@ class Maincontroller(QMainWindow):
 			QMessageBox.information(self, "Unable to open file",
 									"There was an error opening \"%s\"" % filename)
 			return
-		json.dump(self.uiObj, out_file)
+		pickle.dump(self.uiObj, out_file)
 		out_file.close()
 		pass
 
@@ -1048,7 +1048,7 @@ class Maincontroller(QMainWindow):
 			uiObj: User inputs
 		Returns: Save the user input to txt format
 		"""
-		input_file = QFile(os.path.join("Tension", "saveINPUT.txt"))
+		input_file = QFile(os.path.join("Tension", "BsaveINPUT.txt"))
 		if not input_file.open(QFile.WriteOnly | QFile.Text):
 			QMessageBox.warning(self, "Application",
 								"Cannot write file %s: \n%s"

@@ -1096,7 +1096,7 @@ class Maincontroller(QMainWindow):
 			uiObj: User inputs
 		Returns: Save the user input to txt format
 		"""
-		input_file = QFile(os.path.join("Tension", "saveINPUT.txt"))
+		input_file = QFile(os.path.join("Tension", "WsaveINPUT.txt"))
 		if not input_file.open(QFile.WriteOnly | QFile.Text):
 			QMessageBox.warning(self, "Application",
 								"Cannot write file %s: \n%s"

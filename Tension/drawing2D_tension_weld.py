@@ -2102,7 +2102,6 @@ class Side_View (object):
 				ptA10y = ptA7y
 				self.A10 = np.array([ptA10x, ptA10y])
 
-
 			else:
 				ptA2x = ptA1x
 				ptA2y = ptA1y + self.data_object.leg_min
@@ -2139,6 +2138,16 @@ class Side_View (object):
 				ptA10x = ptA7x - self.data_object.t
 				ptA10y = ptA7y
 				self.A10 = np.array([ptA10x, ptA10y])
+
+			# ------------------------------------------  Weld triangle  UP-------------------------------------------
+			self.B1 = self.A1
+			self.B2 = self.A1 + self.data_object.t * np.array([1, 0])
+			self.B3 = self.A1 + self.data_object.t * np.array([0, -1])
+
+			# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+			self.B4 = self.A2
+			self.B5 = self.A2 + self.data_object.t * np.array([1, 0])
+			self.B6 = self.A2 + self.data_object.t * np.array([0, 1])
 
 		elif self.data_object.conn_loc == "Back to Back Angles":
 			ptA1x = 0
@@ -2267,6 +2276,24 @@ class Side_View (object):
 				ptA16y = ptA11y
 				self.A16 = np.array([ptA16x, ptA16y])
 
+			# ------------------------------------------  Weld triangle  UP-------------------------------------------
+			self.B1 = self.A1
+			self.B2 = self.A1 + self.data_object.t * np.array([1, 0])
+			self.B3 = self.A1 + self.data_object.t * np.array([0, -1])
+
+			self.B11 = self.A11
+			self.B12 = self.A11 + self.data_object.t * np.array([-1, 0])
+			self.B13 = self.A11 + self.data_object.t * np.array([0, -1])
+
+			# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+			self.B4 = self.A2
+			self.B5 = self.A2 + self.data_object.t * np.array([1, 0])
+			self.B6 = self.A2 + self.data_object.t * np.array([0, 1])
+
+			self.B14 = self.A12
+			self.B15 = self.A12 + self.data_object.t * np.array([-1, 0])
+			self.B16 = self.A12 + self.data_object.t * np.array([0, 1])
+
 		elif self.data_object.conn_loc == "Star Angles":
 			ptA1x = 0
 			ptA1y = 0
@@ -2394,6 +2421,24 @@ class Side_View (object):
 				ptA16y = ptA11y
 				self.A16 = np.array([ptA16x, ptA16y])
 
+			# ------------------------------------------  Weld triangle  UP-------------------------------------------
+			self.B1 = self.A1
+			self.B2 = self.A1 + self.data_object.t * np.array([1, 0])
+			self.B3 = self.A1 + self.data_object.t * np.array([0, -1])
+
+			self.B11 = self.A11
+			self.B12 = self.A11 + self.data_object.t * np.array([-1, 0])
+			self.B13 = self.A11 + self.data_object.t * np.array([0, -1])
+
+			# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+			self.B4 = self.A2
+			self.B5 = self.A2 + self.data_object.t * np.array([1, 0])
+			self.B6 = self.A2 + self.data_object.t * np.array([0, 1])
+
+			self.B14 = self.A12
+			self.B15 = self.A12 + self.data_object.t * np.array([-1, 0])
+			self.B16 = self.A12 + self.data_object.t * np.array([0, 1])
+
 		elif self.data_object.section_type == "Channels" and (self.data_object.conn_loc == "Back to Back Web" or self.data_object.conn_loc == "Web"):
 			ptA1x = 0
 			ptA1y = 0
@@ -2435,7 +2480,7 @@ class Side_View (object):
 			ptA10y = ptA2y + self.data_object.member_d/2
 			self.A10 = np.array([ptA10x, ptA10y])
 
-			if self.data_object.section_type == "Channels":
+			if self.data_object.section_type == "Channels" and self.data_object.conn_loc == "Web":
 
 				ptA11x = ptA10x - self.data_object.member_tw
 				ptA11y = ptA10y
@@ -2444,6 +2489,16 @@ class Side_View (object):
 				ptA12x = ptA9x - self.data_object.member_tw
 				ptA12y = ptA9y
 				self.A12 = np.array([ptA12x, ptA12y])
+
+				# ------------------------------------------  Weld triangle  UP-------------------------------------------
+				self.B1 = self.A1
+				self.B2 = self.A1 + self.data_object.member_tw * np.array([1, 0])
+				self.B3 = self.A1 + self.data_object.member_tw * np.array([0, -1])
+
+				# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+				self.B4 = self.A2
+				self.B5 = self.A2 + self.data_object.member_tw * np.array([1, 0])
+				self.B6 = self.A2 + self.data_object.member_tw* np.array([0, 1])
 			else:
 				ptA11x = ptA10x - self.data_object.plate_thickness
 				ptA11y = ptA10y
@@ -2475,7 +2530,7 @@ class Side_View (object):
 				self.A17 = np.array([ptA17x, ptA17y])
 
 				ptA18x = ptA17x
-				ptA18y = ptA17y - self.data_object.member_d + 2* self.data_object.member_tf
+				ptA18y = ptA17y - self.data_object.member_d + 2 * self.data_object.member_tf
 				self.A18 = np.array([ptA18x, ptA18y])
 
 				ptA19x = ptA18x - self.data_object.member_B + self.data_object.member_tw
@@ -2485,6 +2540,24 @@ class Side_View (object):
 				ptA20x = ptA19x
 				ptA20y = ptA19y - self.data_object.member_tf
 				self.A20 = np.array([ptA20x, ptA20y])
+
+				# ------------------------------------------  Weld triangle  UP-------------------------------------------
+				self.B1 = self.A1
+				self.B2 = self.A1 + self.data_object.member_tw * np.array([1, 0])
+				self.B3 = self.A1 + self.data_object.member_tw * np.array([0, -1])
+
+				self.B11 = self.A13
+				self.B12 = self.A13 + self.data_object.member_tw * np.array([-1, 0])
+				self.B13 = self.A13 + self.data_object.member_tw * np.array([0, -1])
+
+				# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+				self.B4 = self.A2
+				self.B5 = self.A2 + self.data_object.member_tw * np.array([1, 0])
+				self.B6 = self.A2 + self.data_object.member_tw * np.array([0, 1])
+
+				self.B14 = self.A14
+				self.B15 = self.A14 + self.data_object.member_tw* np.array([-1, 0])
+				self.B16 = self.A14 + self.data_object.member_tw * np.array([0, 1])
 
 
 		elif self.data_object.section_type == "Channels" and self.data_object.conn_loc =="Flange":
@@ -2552,6 +2625,25 @@ class Side_View (object):
 			ptA16x = ptA15x
 			ptA16y = ptA13y
 			self.A16 = np.array([ptA16x, ptA16y])
+
+			# ------------------------------------------  Weld triangle  UP-------------------------------------------
+			self.B1 = self.A13
+			self.B2 = self.A13 + self.data_object.member_tf * np.array([-1, 0])
+			self.B3 = self.A13 + self.data_object.member_tf * np.array([0, -1])
+
+			self.B4 = self.A16
+			self.B5 = self.A16 + self.data_object.member_tf * np.array([1, 0])
+			self.B6 = self.A16 + self.data_object.member_tf * np.array([0, -1])
+
+			# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+			self.B11 = self.A9
+			self.B12 = self.A9 + self.data_object.member_tf * np.array([-1, 0])
+			self.B13 = self.A9 + self.data_object.member_tf * np.array([0, 1])
+
+			self.B14 = self.A12
+			self.B15 = self.A12 + self.data_object.member_tf * np.array([1, 0])
+			self.B16 = self.A12 + self.data_object.member_tf * np.array([0, 1])
+
 
 		elif self.data_object.section_type == "Beams" or "Columns":
 
@@ -2637,6 +2729,24 @@ class Side_View (object):
 				ptA20y = ptA17y
 				self.A20 = np.array([ptA20x, ptA20y])
 
+				# ------------------------------------------  Weld triangle  UP-------------------------------------------
+				self.B1 = self.A13
+				self.B2 = self.A13 + self.data_object.member_tf * np.array([-1, 0])
+				self.B3 = self.A13 + self.data_object.member_tf * np.array([0, -1])
+
+				self.B4 = self.A16
+				self.B5 = self.A16 + self.data_object.member_tf * np.array([1, 0])
+				self.B6 = self.A16 + self.data_object.member_tf * np.array([0, -1])
+
+				# ------------------------------------------  Weld triangle  DOWN-------------------------------------------
+				self.B11 = self.A17
+				self.B12 = self.A17 + self.data_object.member_tf * np.array([-1, 0])
+				self.B13 = self.A17 + self.data_object.member_tf * np.array([0, 1])
+
+				self.B14 = self.A20
+				self.B15 = self.A20 + self.data_object.member_tf * np.array([1, 0])
+				self.B16 = self.A20 + self.data_object.member_tf * np.array([0, 1])
+
 			else:
 				ptA13x = ptA6x
 				ptA13y = ptA6y + self.data_object.member_d/2 - self.data_object.member_tf - self.data_object.weld_oppline/2
@@ -2653,6 +2763,17 @@ class Side_View (object):
 				ptA16x = ptA13x
 				ptA16y = ptA15y
 				self.A16 = np.array([ptA16x, ptA16y])
+
+
+				# ------------------------------------------  Weld triangle  UP-------------------------------------------
+				self.B1 = self.A13
+				self.B2 = self.A13 + self.data_object.member_tw * np.array([1, 0])
+				self.B3 = self.A13 + self.data_object.member_tw * np.array([0, -1])
+
+				self.B4 = self.A16
+				self.B5 = self.A16 + self.data_object.member_tw * np.array([1, 0])
+				self.B6 = self.A16 + self.data_object.member_tw * np.array([0, 1])
+
 
 		else:
 			pass
@@ -2686,6 +2807,11 @@ class Side_View (object):
 			dwg.add(dwg.line(self.A8, self.A9).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A7, self.A10).stroke('blue', width=1, linecap='square'))
+			dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+								 stroke_width=1))
+
 			# dwg.add(dwg.line(self.A1, self.A4).stroke('blue', width=1, linecap='square'))
 		elif self.data_object.conn_loc == "Back to Back Angles":
 			# wd = int((self.data_object.member_length) + 1000)
@@ -2708,6 +2834,14 @@ class Side_View (object):
 			dwg.add(dwg.line(self.A12, self.A9).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A11, self.A10).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A7, self.A10).stroke('blue', width=1, linecap='square'))
+			dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B11, self.B12, self.B13, self.B11], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B14, self.B15, self.B16, self.B14], stroke='black', fill='red',
+								 stroke_width=1))
 
 		elif self.data_object.conn_loc == "Star Angles":
 			# wd = int((self.data_object.membe600r_length) + 1000)
@@ -2730,6 +2864,14 @@ class Side_View (object):
 			dwg.add(dwg.line(self.A12, self.A9).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A11, self.A10).stroke('blue', width=1, linecap='square'))
 			dwg.add(dwg.line(self.A7, self.A10).stroke('blue', width=1, linecap='square'))
+			dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B11, self.B12, self.B13, self.B11], stroke='black', fill='red',
+								 stroke_width=1))
+			dwg.add(dwg.polyline(points=[self.B14, self.B15, self.B16, self.B14], stroke='black', fill='red',
+								 stroke_width=1))
 
 		elif self.data_object.section_type == "Channels":
 			# wd = int((self.data_object.member_length) + 1000)
@@ -2749,12 +2891,25 @@ class Side_View (object):
 					dwg.add(dwg.line(self.A17, self.A16).stroke('blue', width=1, linecap='square'))
 					dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=1, linecap='square'))
 					dwg.add(dwg.line(self.A15, self.A14).stroke('blue', width=1, linecap='square'))
+					dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+										 stroke_width=1))
+					dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+										 stroke_width=1))
+					dwg.add(dwg.polyline(points=[self.B11, self.B12, self.B13, self.B11], stroke='black', fill='red',
+										 stroke_width=1))
+					dwg.add(dwg.polyline(points=[self.B14, self.B15, self.B16, self.B14], stroke='black', fill='red',
+										 stroke_width=1))
 
 				dwg.add(dwg.line(self.A9, self.A1).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A2, self.A10).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A10, self.A11).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A12, self.A11).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A12, self.A9).stroke('blue', width=1, linecap='square'))
+				dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+									 stroke_width=1))
+				dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+									 stroke_width=1))
+
 			else:
 				dwg.add(dwg.line(self.A9, self.A10).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A11, self.A10).stroke('blue', width=1, linecap='square'))
@@ -2762,6 +2917,8 @@ class Side_View (object):
 				dwg.add(dwg.line(self.A13, self.A14).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A14, self.A15).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=1, linecap='square'))
+
+
 
 		elif self.data_object.section_type == "Beams" or "Columns":
 			ht = int(self.data_object.member_d + 600)
@@ -2778,10 +2935,23 @@ class Side_View (object):
 				dwg.add(dwg.line(self.A17, self.A18).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A19, self.A18).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A19, self.A20).stroke('blue', width=1, linecap='square'))
+				dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+									 stroke_width=2.5))
+				dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+									 stroke_width=2.5))
+				dwg.add(dwg.polyline(points=[self.B11, self.B12, self.B13, self.B11], stroke='black', fill='red',
+									 stroke_width=2.5))
+				dwg.add(dwg.polyline(points=[self.B14, self.B15, self.B16, self.B14], stroke='black', fill='red',
+									 stroke_width=2.5))
 			else:
 				dwg.add(dwg.line(self.A13, self.A14).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A14, self.A15).stroke('blue', width=1, linecap='square'))
 				dwg.add(dwg.line(self.A15, self.A16).stroke('blue', width=1, linecap='square'))
+				dwg.add(dwg.polyline(points=[self.B1, self.B2, self.B3, self.B1], stroke='black', fill='red',
+									 stroke_width=2.5))
+				dwg.add(dwg.polyline(points=[self.B4, self.B5, self.B6, self.B4], stroke='black', fill='red',
+									 stroke_width=2.5))
+
 		else:
 			pass
 
@@ -2829,7 +2999,7 @@ class Side_View (object):
 
 			point1 = ptx2 - (self.data_object.weld_oppline/2) * np.array([0, 1])
 			params = {"offset": 100, "textoffset": 40, "lineori": "left", "endlinedim": 5, "arrowlen": 20}
-			self.data_object.draw_dimension_outer_arrow_side(dwg,ptx2, point1,str(self.data_object.weld_oppline/2),params)
+			self.data_object.draw_dimension_outer_arrow_side(dwg, ptx2 , point1 , str(self.data_object.weld_oppline/2) , params )
 
 		elif self.data_object.conn_loc == "Star Angles":
 			ptx1 = self.A1
