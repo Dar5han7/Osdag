@@ -562,6 +562,29 @@ class SAngle_Properties(Section_Properties):
     #     # self.I_yz = 1.000
     #     return round(self.I_yz / 10000, 2)
 
+    def calc_MomentofAreaYZ(self, a, b, t, l, T = 0.0):
+        if l == "Long Leg":
+            x1 = ((b / 2) + (T / 2))
+            y1 = a / 2
+            A1 = a * b
+            x2 = ((b + t) / 2) + T / 2
+            y2 = (a + t) / 2
+            A2 = (a - t) * (b - t)
+            Ixy1 = x1 * y1 * A1
+            Ixy2 = x2 * y2 * A2
+        else:
+            x1 = ((a / 2) + (T / 2))
+            y1 = b / 2
+            A1 = a * b
+            x2 = ((a + t) / 2) + T / 2
+            y2 = (b + t) / 2
+            A2 = (b - t) * (a - t)
+            Ixy1 = x1 * y1 * A1
+            Ixy2 = x2 * y2 * A2
+
+        I_xy = 2 * (Ixy1 - Ixy2)
+        return round(I_xy / 10000, 2)
+
     def calc_MomentOfAreaV(self, a, b, t, l, thickness=0.0):
         "min MI will always have subscript v"
         if self.db == False:
