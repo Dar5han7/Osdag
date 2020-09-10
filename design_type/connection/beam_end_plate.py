@@ -389,7 +389,7 @@ class BeamBeamEndPlateSplice(MomentConnection):
         # section details
         self.mainmodule = "Moment Connection"
         self.module = KEY_DISP_BEAMENDPLATE
-        self.connectivity = "Flush"
+        self.connectivity = "Extended both ways"
         self.endplate_type = design_dictionary[KEY_ENDPLATE_TYPE]
         self.material = Material(material_grade=design_dictionary[KEY_SEC_MATERIAL])
 
@@ -437,33 +437,33 @@ class BeamBeamEndPlateSplice(MomentConnection):
 
     def hard_inputs(self):
         ################################Flush###################################
-        self.bolt.bolt_diameter_provided = 16
-        self.bolt.bolt_grade_provided = 8.8
-        self.plate.bolts_required = 48
-        self.bolt_column = 4
-        self.bolt_row = 8
-        self.mid_bolt_row = 4
-        self.plate.edge_dist_provided = 35
-        self.plate.end_dist_provided = 35
-        # self.out_bolt = 0
-        # self.outside_pitch = 0
-        self.plate.pitch_provided = 40
-        self.plate.gauge_provided = 40
-        self.flange_weld.size = 4.0
-        self.web_weld.size = 4.0
-        self.plate.height = self.supported_section.depth +25
-        self.plate.width = self.supported_section.flange_width +25
-        self.plate.thickness_provided = 12.0
-        self.projection = 12.5
+        # self.bolt.bolt_diameter_provided = 16
+        # self.bolt.bolt_grade_provided = 8.8
+        # self.plate.bolts_required = 10
+        # self.bolt_column = 2
+        # self.bolt_row = 4
+        # self.mid_bolt_row = 1
+        # self.plate.edge_dist_provided = 35
+        # self.plate.end_dist_provided = 35
+        # # self.out_bolt = 0
+        # # self.outside_pitch = 0
+        # self.plate.pitch_provided = 40
+        # self.plate.gauge_provided = 40
+        # self.flange_weld.size = 4.0
+        # self.web_weld.size = 4.0
+        # self.plate.height = self.supported_section.depth +25
+        # self.plate.width = self.supported_section.flange_width +25
+        # self.plate.thickness_provided = 12.0
+        # self.projection = 12.5
         ################################Flush###################################
 
         ################################Oneway###################################
         # self.bolt.bolt_diameter_provided = 16
         # self.bolt.bolt_grade_provided = 8.8
-        # self.plate.bolts_required =44
-        # self.bolt_column = 4
-        # self.bolt_row = 7
-        # self.mid_bolt_row = 4
+        # self.plate.bolts_required =12
+        # self.bolt_column = 2
+        # self.bolt_row = 5
+        # self.mid_bolt_row = 1
         # self.plate.edge_dist_provided = 35
         # self.plate.end_dist_provided = 35
         # # self.out_bolt = 0
@@ -485,29 +485,29 @@ class BeamBeamEndPlateSplice(MomentConnection):
     ################################Oneway###################################
 
         ################################bothway###################################
-        # self.bolt.bolt_diameter_provided = 16
-        # self.bolt.bolt_grade_provided = 8.8
-        # self.plate.bolts_required = 36
-        # self.bolt_column = 2
-        # self.bolt_row = 14
-        # self.mid_bolt_row = 4
-        # self.plate.edge_dist_provided = 35
-        # self.plate.end_dist_provided = 35
-        # # self.out_bolt = 0
-        # # self.outside_pitch = 0
-        # self.projection = 12.5
-        # self.plate.pitch_provided = 40
-        # self.plate.gauge_provided = 40
-        # self.flange_weld.size = 4.0
-        # self.web_weld.size = 4.0
-        # if self.bolt_row <=6:
-        #     self.plate.height = self.supported_section.depth + 4 * self.plate.end_dist_provided
-        # else:
-        #     self.plate.height = self.supported_section.depth + 4 * self.plate.end_dist_provided + 2 * self.plate.pitch_provided
-        #
-        # self.plate.width = self.supported_section.flange_width + 25
-        # self.plate.thickness_provided = 12.0
-        # self.projection = 12.5
+        self.bolt.bolt_diameter_provided = 16
+        self.bolt.bolt_grade_provided = 8.8
+        self.plate.bolts_required = 36
+        self.bolt_column = 4
+        self.bolt_row = 8
+        self.mid_bolt_row = 1
+        self.plate.edge_dist_provided = 35
+        self.plate.end_dist_provided = 35
+        # self.out_bolt = 0
+        # self.outside_pitch = 0
+        self.projection = 12.5
+        self.plate.pitch_provided = 40
+        self.plate.gauge_provided = 40
+        self.flange_weld.size = 4.0
+        self.web_weld.size = 4.0
+        if self.bolt_row <=6:
+            self.plate.height = self.supported_section.depth + 4 * self.plate.end_dist_provided
+        else:
+            self.plate.height = self.supported_section.depth + 4 * self.plate.end_dist_provided + 2 * self.plate.pitch_provided
+
+        self.plate.width = self.supported_section.flange_width + 25
+        self.plate.thickness_provided = 12.0
+        self.projection = 12.5
         ################################bothway###################################
 
 
